@@ -1,6 +1,16 @@
-﻿namespace RPG_API.Data.Context
+﻿using Microsoft.EntityFrameworkCore;
+using RPG_API.Models;
+
+namespace RPG_API.Data.Context
 {
-    public class APIContext
+    public class APIContext: DbContext
     {
+        public DbSet<Character> Character { get; set; }
+        public DbSet<Monster> Monster { get; set; }
+        public DbSet<Map> Map { get; set; }
+        public DbSet<Quest> Quest { get;set; }
+        public DbSet<Tile> Tile { get; set; }
+
+        public APIContext(DbContextOptions<APIContext> options): base(options) { }
     }
 }
