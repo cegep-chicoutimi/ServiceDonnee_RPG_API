@@ -10,5 +10,8 @@
         public int Damage { get; set; }
         public int Armor { get; set; }
         public int Lives { get; set; }
+        public List<Quest> Quests { get; set; }
+        public Map Map { get; set; }
+
     }
 }
