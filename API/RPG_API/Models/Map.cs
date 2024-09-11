@@ -1,8 +1,9 @@
-﻿namespace RPG_API.Models
+﻿using RPG_API.Models.Base;
+
+namespace RPG_API.Models
 {
-    public class Map
+    public class Map : ModelBase
     {
-        public int Id { get; set; }
         public List<List<int>> Coordinates { get; set; }
         public string ImageUrl { get; set; }
         public Character Character { get; set; }    
