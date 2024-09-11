@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RPG_API.Models;
+using RPG_API.Models.Base;
 
 namespace RPG_API.Data.Context
 {
@@ -10,6 +11,7 @@ namespace RPG_API.Data.Context
         public DbSet<Map> Map { get; set; }
         public DbSet<Quest> Quest { get;set; }
         public DbSet<Tile> Tile { get; set; }
+        public DbSet<Item> Item { get; set; }
 
         public APIContext(DbContextOptions<APIContext> options): base(options) { }
     }
