@@ -1,8 +1,9 @@
-﻿namespace RPG_API.Models
+﻿using RPG_API.Models.Base;
+
+namespace RPG_API.Models
 {
-    public class Quest
+    public class Quest : ModelBase
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int Reward { get; set; }
