@@ -1,4 +1,6 @@
-﻿namespace RPG_API.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RPG_API.Models.Base
 {
     public enum TypeItem
     {
@@ -7,12 +9,14 @@
         Consumable,
         Quest
     }
-    public class Item
+    public class Item : ModelBase
     {
         public string Name { get; set; }
         public double BoostAttack { get; set; }
         public double BoostDefence { get; set; }
         public int HealthRestoration { get; set; }
         public TypeItem Type { get; set; }
+        public bool IsEquipped { get; set; }
+        public ICollection<Character?> Characters { get; set; }
     }
 }
