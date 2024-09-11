@@ -1,4 +1,6 @@
-﻿namespace RPG_API.Models
+﻿using RPG_API.Models.Base;
+
+namespace RPG_API.Models
 {
     public enum Type
     {
@@ -7,9 +9,8 @@
         Hard,
         Boss
     }
-    public class Monster
+    public class Monster : ModelBase
     {
-        public int Id { get; set; }
         public Type Type { get; set; }
 
         public string Name { get; set; }
