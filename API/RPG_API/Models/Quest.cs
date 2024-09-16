@@ -9,8 +9,7 @@ namespace RPG_API.Models
         public int Reward { get; set; }
         public bool Status { get; set; }
         public ICollection<Character> Characters { get; set; }
-        public int MonsterId { get; set; }
-        public Monster Monster { get; set; }
+        public ICollection<Monster> Monster { get; set; }
 
        
     }
