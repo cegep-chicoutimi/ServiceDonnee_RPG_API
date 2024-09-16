@@ -27,10 +27,11 @@ namespace RPG_API.Controllers
             return character;
         }
 
-        //PUT: api/Character/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacter(int id, Character character)
+        //PUT: api/Character/Update/{id}
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> Update(int id, Character character)
         {
+
             if(id != character.Id)
             {
                 return BadRequest();
@@ -63,8 +64,8 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Character
-        [HttpPost]
-        public async Task<ActionResult<Character>> PostFruit(Character character)
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Character>> Add([FromBody]Character character)
         {
             _context.Character.Add(character);
             await _context.SaveChangesAsync();
@@ -73,8 +74,8 @@ namespace RPG_API.Controllers
         }
 
         //DELETE: api/Character/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCharacter(int id)
+        [HttpDelete("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var character = await _context.Character.FindAsync(id);
             if(character == null)
