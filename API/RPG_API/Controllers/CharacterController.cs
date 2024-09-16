@@ -5,7 +5,7 @@ using RPG_API.Models;
 
 namespace RPG_API.Controllers
 {
-    public class CharacterController : Controller
+    public class CharacterController : ControllerBase
     {
         private readonly APIContext _context;
 
@@ -25,6 +25,19 @@ namespace RPG_API.Controllers
                 return NotFound();
             }
             return character;
+        }
+
+        //GET: api/Character/GetAll
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<Character>>> GetAll()
+        {
+            List<Character> characters = await _context.Character.ToListAsync();
+
+            if (characters == null || characters.FirstOrDefault() == null)
+            {
+                return NotFound();
+            }
+            return characters;
         }
 
         //PUT: api/Character/Update/{id}
@@ -48,29 +61,29 @@ namespace RPG_API.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!CharacterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
         }
 
         // POST: api/Character
-        [HttpPost("[action]")]
-        public async Task<ActionResult<Character>> Add([FromBody]Character character)
+        [HttpPost("[action]/{character}")]
+        public async Task<ActionResult<Character>> Create([FromBody]Character character)
         {
             _context.Character.Add(character);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
 
-            return CreatedAtAction("GetCharacter", new { id = character.Id }, character); //Attention ici, il faudrait peut-être retourner un DTO selon le user
+            return Created(character.Id.ToString(), character);
         }
 
         //DELETE: api/Character/id
@@ -86,7 +99,7 @@ namespace RPG_API.Controllers
             _context.Character.Remove(character);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
         private bool CharacterExists(int id)
         {
