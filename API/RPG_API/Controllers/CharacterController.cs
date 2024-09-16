@@ -14,9 +14,9 @@ namespace RPG_API.Controllers
             _context = context;
         }
 
-        //GET: api/Character/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacter(int id)
+        //GET: api/Character/Get/{id}
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Character>> Get(int id)
         {
            var character = await _context.Character.FindAsync(id);
 
