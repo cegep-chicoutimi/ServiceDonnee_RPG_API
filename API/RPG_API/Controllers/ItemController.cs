@@ -5,6 +5,8 @@ using RPG_API.Models.Base;
 
 namespace RPG_API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ItemController : ControllerBase
     {
         private readonly APIContext _context;

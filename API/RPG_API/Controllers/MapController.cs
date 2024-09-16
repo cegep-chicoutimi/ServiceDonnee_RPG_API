@@ -5,6 +5,8 @@ using RPG_API.Models;
 
 namespace RPG_API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MapController : ControllerBase
     {
         private readonly APIContext _context;
@@ -42,7 +44,7 @@ namespace RPG_API.Controllers
 
         // PUT: api/Map/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, Map map)
+        public async Task<IActionResult> Update(int id, [FromBody]Map map)
         {
 
             if (id != map.Id)
@@ -77,6 +79,22 @@ namespace RPG_API.Controllers
             await _context.SaveChangesAsync();
 
             return Created(map.Id.ToString(), map);
+        }
+
+        // DELETE: api/Map/Delete/{id}
+        [HttpDelete("[action]/{id}")]
+        public async Task<ActionResult<Map>> Delete(int id)
+        {
+            Map map = await _context.Map.FindAsync(id);
+            if (map == null)
+            {
+                return NotFound();
+            }
+
+            _context.Map.Remove(map);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
