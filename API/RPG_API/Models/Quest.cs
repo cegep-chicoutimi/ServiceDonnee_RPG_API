@@ -8,8 +8,9 @@ namespace RPG_API.Models
         public string Description { get; set; }
         public int Reward { get; set; }
         public bool Status { get; set; }
-        public Character Character { get; set; }
-        public Monster? Monster { get; set; }
+        public ICollection<Character> Characters { get; set; }
+        public int MonsterId { get; set; }
+        public Monster Monster { get; set; }
 
        
     }
