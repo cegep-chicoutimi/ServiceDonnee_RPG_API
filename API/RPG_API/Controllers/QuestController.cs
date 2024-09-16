@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RPG_API.Data.Context;
 
 namespace RPG_API.Controllers
 {
-    public class QuestController : Controller
+    public class QuestController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly APIContext _context;
+
+        public QuestController(APIContext context)
         {
-            return View();
+            _context = context;
         }
+
     }
 }

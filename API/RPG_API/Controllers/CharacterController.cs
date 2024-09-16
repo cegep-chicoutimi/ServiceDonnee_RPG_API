@@ -5,7 +5,7 @@ using RPG_API.Models;
 
 namespace RPG_API.Controllers
 {
-    public class CharacterController : Controller
+    public class CharacterController : ControllerBase
     {
         private readonly APIContext _context;
 
@@ -14,9 +14,9 @@ namespace RPG_API.Controllers
             _context = context;
         }
 
-        //GET: api/Character/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacter(int id)
+        //GET: api/Character/Get/{id}
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Character>> Get(int id)
         {
            var character = await _context.Character.FindAsync(id);
 
@@ -27,10 +27,24 @@ namespace RPG_API.Controllers
             return character;
         }
 
-        //PUT: api/Character/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacter(int id, Character character)
+        //GET: api/Character/GetAll
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<Character>>> GetAll()
         {
+            List<Character> characters = await _context.Character.ToListAsync();
+
+            if (characters == null || characters.FirstOrDefault() == null)
+            {
+                return NotFound();
+            }
+            return characters;
+        }
+
+        //PUT: api/Character/Update/{id}
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> Update(int id, Character character)
+        {
+
             if(id != character.Id)
             {
                 return BadRequest();
@@ -47,34 +61,34 @@ namespace RPG_API.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!CharacterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
         }
 
         // POST: api/Character
-        [HttpPost]
-        public async Task<ActionResult<Character>> PostFruit(Character character)
+        [HttpPost("[action]/{character}")]
+        public async Task<ActionResult<Character>> Create([FromBody]Character character)
         {
             _context.Character.Add(character);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
 
-            return CreatedAtAction("GetCharacter", new { id = character.Id }, character); //Attention ici, il faudrait peut-être retourner un DTO selon le user
+            return Created(character.Id.ToString(), character);
         }
 
         //DELETE: api/Character/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCharacter(int id)
+        [HttpDelete("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var character = await _context.Character.FindAsync(id);
             if(character == null)
@@ -85,7 +99,7 @@ namespace RPG_API.Controllers
             _context.Character.Remove(character);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
         private bool CharacterExists(int id)
         {
