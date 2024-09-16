@@ -2,11 +2,8 @@
 
 namespace RPG_API.Controllers
 {
-    public class TileController : Controller
+    public class TileController : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
     }
 }

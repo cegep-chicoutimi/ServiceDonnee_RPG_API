@@ -5,7 +5,7 @@ using RPG_API.Models;
 
 namespace RPG_API.Controllers
 {
-    public class CharacterController : Controller
+    public class CharacterController : ControllerBase
     {
         private readonly APIContext _context;
 

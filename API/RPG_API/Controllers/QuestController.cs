@@ -2,7 +2,7 @@
 
 namespace RPG_API.Controllers
 {
-    public class QuestController : Controller
+    public class QuestController : ControllerBase
     {
         public IActionResult Index()
         {

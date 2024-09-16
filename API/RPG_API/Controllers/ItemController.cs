@@ -2,7 +2,7 @@
 
 namespace RPG_API.Controllers
 {
-    public class ItemController : Controller
+    public class ItemController : ControllerBase
     {
         public IActionResult Index()
         {

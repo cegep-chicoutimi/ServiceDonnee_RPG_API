@@ -2,7 +2,7 @@
 
 namespace RPG_API.Controllers
 {
-    public class MonsterController : Controller
+    public class MonsterController : ControllerBase
     {
         public IActionResult Index()
         {

@@ -2,7 +2,7 @@
 
 namespace RPG_API.Controllers
 {
-    public class MapController : Controller
+    public class MapController : ControllerBase
     {
         public IActionResult Index()
         {
