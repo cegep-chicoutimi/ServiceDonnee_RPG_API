@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public TypeMonster Type { get; set; }
-        public Map Map { get; set; }
+        
 
         public static MonsterDTODetails MonsterToDTO(Monster m)
         {
