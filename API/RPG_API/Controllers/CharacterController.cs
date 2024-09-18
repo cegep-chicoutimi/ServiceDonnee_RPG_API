@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RPG_API.Data.Context;
 using RPG_API.Models;
+using RPG_API.Models.Base;
 
 namespace RPG_API.Controllers
 {
@@ -72,6 +73,40 @@ namespace RPG_API.Controllers
             return NoContent();
         }
 
+        //PUT :api/Character/UpdateInventaire/{id}&{itemid}
+        [HttpPut("[action]/{id}&{itemid}")]
+        public async Task<IActionResult> AddItemToInventory(int id, int itemid)
+        {
+
+          // find item 
+            Item item = await _context.Item.FindAsync(itemid);
+            if (item == null)
+            { 
+                return NotFound(); 
+            }
+
+          // find the character
+            Character character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+            // add item to character's inventory
+            character.Inventory.Add(item);
+          
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
         // POST: api/Character
         [HttpPost("[action]/{character}")]
         public async Task<ActionResult<Character>> Create([FromBody]Character character)
@@ -100,6 +135,50 @@ namespace RPG_API.Controllers
             }
 
             _context.Character.Remove(character);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+        //DELETE: api/Character/id/itemid
+        [HttpDelete("[action]/{id}&{itemid}")]
+        public async Task<IActionResult> DeleteItemFromInventory(int id, int itemid)
+        {
+            // find item 
+            Item item = await _context.Item.FindAsync(itemid);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            // find the character
+            Character character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
+
+            // remove item from character's inventory
+
+            var itemToRemove = character.Inventory.FirstOrDefault(i => i.Equals(item));
+            if (itemToRemove != null)
+            {
+                character.Inventory.Remove(itemToRemove);
+                if ( character.Inventory.FirstOrDefault(i => i.Equals(item)) == null)
+                {
+                    // if this item cannot be found in the inventory, remove relation
+                    item.Characters.Remove(character);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+           
+
+
             await _context.SaveChangesAsync();
 
             return Ok();

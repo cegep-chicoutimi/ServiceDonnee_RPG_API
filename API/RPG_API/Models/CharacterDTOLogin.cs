@@ -6,7 +6,7 @@
         public int Xp { get; set; }
         public static CharacterDTOLogin CharacterToDTO(CharacterDTOLogin c)
         {
-            return new CharacterDTOLogin { Id = c.Id, Name = c.Name, Xp = c.Xp };
+            return new CharacterDTOLogin { Name = c.Name, Xp = c.Xp };
         }
 
     }
