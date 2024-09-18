@@ -11,6 +11,5 @@ namespace RPG_API.Models
         public ICollection<Character> Characters { get; set; }
         public ICollection<Monster> Monster { get; set; }
 
-       
     }
 }

@@ -2,7 +2,6 @@
 {
     public class CharacterDTOLogin
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Xp { get; set; }
         public static CharacterDTOLogin CharacterToDTO(CharacterDTOLogin c)
