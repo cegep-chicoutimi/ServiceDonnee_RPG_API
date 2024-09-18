@@ -58,6 +58,7 @@ namespace RPG_API.Controllers
                 return NotFound();
             }
             newCharacter.Name = character.Name;
+            //TODO all value changable
 
             try
             {
