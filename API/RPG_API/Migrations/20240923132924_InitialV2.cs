@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RPG_API.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialV2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,21 +13,19 @@ namespace RPG_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Character",
+                name: "Class",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Xp = table.Column<int>(type: "int", nullable: false),
-                    Damage = table.Column<int>(type: "int", nullable: false),
-                    Armor = table.Column<int>(type: "int", nullable: false),
-                    Lives = table.Column<int>(type: "int", nullable: false)
+                    BoostAttack = table.Column<double>(type: "double", nullable: false),
+                    BoostDefence = table.Column<double>(type: "double", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Character", x => x.Id);
+                    table.PrimaryKey("PK_Class", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -42,8 +40,7 @@ namespace RPG_API.Migrations
                     BoostAttack = table.Column<double>(type: "double", nullable: false),
                     BoostDefence = table.Column<double>(type: "double", nullable: false),
                     HealthRestoration = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    IsEquipped = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,22 +49,45 @@ namespace RPG_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Map",
+                name: "Quest",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                    Title = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CharacterId = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Reward = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Map", x => x.Id);
+                    table.PrimaryKey("PK_Quest", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Character",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Xp = table.Column<int>(type: "int", nullable: false),
+                    Damage = table.Column<int>(type: "int", nullable: false),
+                    Armor = table.Column<int>(type: "int", nullable: false),
+                    Lives = table.Column<int>(type: "int", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Character", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Map_Character_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "Character",
+                        name: "FK_Character_Class_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Class",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -99,12 +119,85 @@ namespace RPG_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "CharacterQuest",
+                columns: table => new
+                {
+                    CharactersId = table.Column<int>(type: "int", nullable: false),
+                    QuestsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CharacterQuest", x => new { x.CharactersId, x.QuestsId });
+                    table.ForeignKey(
+                        name: "FK_CharacterQuest_Character_CharactersId",
+                        column: x => x.CharactersId,
+                        principalTable: "Character",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CharacterQuest_Quest_QuestsId",
+                        column: x => x.QuestsId,
+                        principalTable: "Quest",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "JonctionItemCharacter",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CharacterId = table.Column<int>(type: "int", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JonctionItemCharacter", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JonctionItemCharacter_Character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Character",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_JonctionItemCharacter_Item_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Item",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Map",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CharacterId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Map", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Map_Character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Character",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Monster",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Type = table.Column<int>(type: "int", nullable: false),
+                    Difficulty = table.Column<int>(type: "int", nullable: false),
+                    Category = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     XpGiven = table.Column<int>(type: "int", nullable: false),
@@ -149,42 +242,54 @@ namespace RPG_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Quest",
+                name: "MonsterQuest",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Reward = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CharacterId = table.Column<int>(type: "int", nullable: false),
-                    MonsterId = table.Column<int>(type: "int", nullable: false)
+                    MonsterId = table.Column<int>(type: "int", nullable: false),
+                    QuestId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Quest", x => x.Id);
+                    table.PrimaryKey("PK_MonsterQuest", x => new { x.MonsterId, x.QuestId });
                     table.ForeignKey(
-                        name: "FK_Quest_Character_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "Character",
+                        name: "FK_MonsterQuest_Monster_MonsterId",
+                        column: x => x.MonsterId,
+                        principalTable: "Monster",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Quest_Monster_MonsterId",
-                        column: x => x.MonsterId,
-                        principalTable: "Monster",
+                        name: "FK_MonsterQuest_Quest_QuestId",
+                        column: x => x.QuestId,
+                        principalTable: "Quest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Character_ClassId",
+                table: "Character",
+                column: "ClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterItem_InventoryId",
                 table: "CharacterItem",
                 column: "InventoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterQuest_QuestsId",
+                table: "CharacterQuest",
+                column: "QuestsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JonctionItemCharacter_CharacterId",
+                table: "JonctionItemCharacter",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JonctionItemCharacter_ItemId",
+                table: "JonctionItemCharacter",
+                column: "ItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Map_CharacterId",
@@ -198,15 +303,9 @@ namespace RPG_API.Migrations
                 column: "MapId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Quest_CharacterId",
-                table: "Quest",
-                column: "CharacterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Quest_MonsterId",
-                table: "Quest",
-                column: "MonsterId",
-                unique: true);
+                name: "IX_MonsterQuest_QuestId",
+                table: "MonsterQuest",
+                column: "QuestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tile_MapId",
@@ -220,7 +319,13 @@ namespace RPG_API.Migrations
                 name: "CharacterItem");
 
             migrationBuilder.DropTable(
-                name: "Quest");
+                name: "CharacterQuest");
+
+            migrationBuilder.DropTable(
+                name: "JonctionItemCharacter");
+
+            migrationBuilder.DropTable(
+                name: "MonsterQuest");
 
             migrationBuilder.DropTable(
                 name: "Tile");
@@ -232,10 +337,16 @@ namespace RPG_API.Migrations
                 name: "Monster");
 
             migrationBuilder.DropTable(
+                name: "Quest");
+
+            migrationBuilder.DropTable(
                 name: "Map");
 
             migrationBuilder.DropTable(
                 name: "Character");
+
+            migrationBuilder.DropTable(
+                name: "Class");
         }
     }
 }

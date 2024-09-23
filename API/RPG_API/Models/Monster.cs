@@ -2,16 +2,30 @@
 
 namespace RPG_API.Models
 {
-    public enum TypeMonster
+    public enum DifficultyMonster
     {
         Easy,
         Medium,
         Hard,
         Boss
     }
+    public enum Category
+    {
+        Spirit, 
+        Demon, 
+        Undead, 
+        Giant, 
+        Chimera, 
+        Dragon, 
+        Vampire, 
+        Aquatic, 
+        Flying, 
+        Insect
+    }
     public class Monster: ModelBase
     {
-        public TypeMonster Type { get; set; }
+        public DifficultyMonster Difficulty { get; set; }
+        public Category Category { get; set; }
         public string Name { get; set; }
         public int XpGiven { get; set; }
         public int Damage { get; set; }

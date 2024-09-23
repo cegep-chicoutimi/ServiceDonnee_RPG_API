@@ -2,7 +2,7 @@
 {
     public class MonsterDTOCreate
     {
-        public TypeMonster Type { get; set; }
+        public DifficultyMonster Type { get; set; }
         public string Name { get; set; }
         public int XpGiven { get; set; }
         public int Damage { get; set; }
