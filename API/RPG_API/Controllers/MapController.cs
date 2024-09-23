@@ -43,7 +43,7 @@ namespace RPG_API.Controllers
         }
 
         // PUT: api/Map/Update/{id}
-        [HttpPut("[action]/{id}")]
+        [HttpPut("[action]/{id}&{map}")]
         public async Task<IActionResult> Update(int id, [FromBody]Map map)
         {
 

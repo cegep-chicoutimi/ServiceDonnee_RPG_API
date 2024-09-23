@@ -10,7 +10,9 @@ namespace RPG_API.Models
         // Inventaire d'items du personnage
         public ICollection<Item>? Inventory { get; set; }
         // Items équipés
+
         public ICollection<JonctionItemCharacter>? Equipment { get; set; }
+
         public int Xp { get; set; }
         public int Damage { get; set; }
         public int Armor { get; set; }

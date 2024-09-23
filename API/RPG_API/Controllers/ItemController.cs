@@ -43,7 +43,7 @@ namespace RPG_API.Controllers
         }
 
         //PUT: api/Item/Update/{id}
-        [HttpPut("[action]/{id}")]
+        [HttpPut("[action]/{id}&{item}")]
         public async Task<IActionResult> Update(int id, [FromBody]Item item)
         {
 

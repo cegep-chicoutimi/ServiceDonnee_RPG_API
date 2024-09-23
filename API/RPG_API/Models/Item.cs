@@ -18,6 +18,5 @@ namespace RPG_API.Models.Base
         public TypeItem Type { get; set; }
         public ICollection<Character>? Characters { get; set; }
         public ICollection<JonctionItemCharacter>? Equipment { get; set; }
-
     }
 }
