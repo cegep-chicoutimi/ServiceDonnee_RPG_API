@@ -12,6 +12,7 @@ namespace RPG_API.Data.Context
         public DbSet<Quest> Quest { get;set; }
         public DbSet<Tile> Tile { get; set; }
         public DbSet<Item> Item { get; set; }
+        public DbSet<Class> Class { get; set; }
 
         public APIContext(DbContextOptions<APIContext> options): base(options) { }
     }
