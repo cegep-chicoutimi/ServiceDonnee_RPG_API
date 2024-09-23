@@ -100,6 +100,9 @@ namespace RPG_API.Migrations
                     b.Property<int>("Armor")
                         .HasColumnType("int");
 
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Damage")
                         .HasColumnType("int");
 
@@ -115,7 +118,30 @@ namespace RPG_API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClassId");
+
                     b.ToTable("Character");
+                });
+
+            modelBuilder.Entity("RPG_API.Models.Class", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<double>("BoostAttack")
+                        .HasColumnType("double");
+
+                    b.Property<double>("BoostDefence")
+                        .HasColumnType("double");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Class");
                 });
 
             modelBuilder.Entity("RPG_API.Models.JonctionItemCharacter", b =>
@@ -169,7 +195,13 @@ namespace RPG_API.Migrations
                     b.Property<int>("Armor")
                         .HasColumnType("int");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
                     b.Property<int>("Damage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Difficulty")
                         .HasColumnType("int");
 
                     b.Property<int>("Health")
@@ -181,9 +213,6 @@ namespace RPG_API.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.Property<int>("XpGiven")
                         .HasColumnType("int");
@@ -288,6 +317,17 @@ namespace RPG_API.Migrations
                         .HasForeignKey("QuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RPG_API.Models.Character", b =>
+                {
+                    b.HasOne("RPG_API.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("RPG_API.Models.JonctionItemCharacter", b =>
