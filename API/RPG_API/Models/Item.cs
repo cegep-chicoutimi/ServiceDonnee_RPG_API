@@ -16,6 +16,7 @@ namespace RPG_API.Models.Base
         public double BoostDefence { get; set; }
         public int HealthRestoration { get; set; }
         public TypeItem Type { get; set; }
-        public ICollection<Character?> Characters { get; set; }
+        public ICollection<Character>? Characters { get; set; }
+        public ICollection<JonctionItemCharacter>? Equipment { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace RPG_API.Models
 {
-   
+
     public class Tile : ModelBase
     {
         public int Type { get; set; }

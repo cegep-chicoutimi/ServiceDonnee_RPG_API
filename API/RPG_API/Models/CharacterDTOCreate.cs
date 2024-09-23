@@ -6,9 +6,10 @@
         public int Damage { get; set; }
         public int Armor { get; set; }
         public int Lives { get; set; }
+        public Class Class { get; set; }
         public static CharacterDTOCreate CharacterToDTO(CharacterDTOCreate c)
         {
-            return new CharacterDTOCreate { Name = c.Name, Damage = c.Damage, Armor = c.Armor, Lives = c.Lives};
+            return new CharacterDTOCreate { Name = c.Name, Damage = c.Damage, Armor = c.Armor, Lives = c.Lives, Class = c.Class };
         }
     }
 }
