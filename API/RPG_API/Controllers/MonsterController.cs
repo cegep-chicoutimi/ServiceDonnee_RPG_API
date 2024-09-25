@@ -29,6 +29,87 @@ namespace RPG_API.Controllers
             return monster;
         }
 
+
+        [HttpGet("Search")]
+        public async Task<ActionResult<IEnumerable<Monster>>> GetMonsters(
+      [FromQuery] string? NameContains,
+      [FromQuery] string? NameStartsBy,
+      [FromQuery] int? Category,
+      [FromQuery] int? Difficulty,
+      [FromQuery] int? MapId,
+      [FromQuery] int pageNumber = 1,
+      [FromQuery] int pageSize = 10)
+        {
+            // Vérifier si tous les paramètres de recherche sont nuls
+            if (string.IsNullOrEmpty(NameContains) &&
+                string.IsNullOrEmpty(NameStartsBy) &&
+                !Category.HasValue &&
+                !Difficulty.HasValue &&
+                !MapId.HasValue)
+            {
+                return BadRequest(new { Message = "Aucun filtre de recherche fourni." });
+            }
+
+            var monsters = _context.Monster.AsQueryable();
+
+            // Filtres pour le nom
+            if (!string.IsNullOrEmpty(NameContains))
+            {
+                monsters = monsters.Where(m => EF.Functions.Like(m.Name, $"%{NameContains}%"));
+            }
+
+            if (!string.IsNullOrEmpty(NameStartsBy))
+            {
+                monsters = monsters.Where(m => m.Name.StartsWith(NameStartsBy));
+            }
+
+            // Filtre pour la catégorie
+            if (Category.HasValue)
+            {
+                monsters = monsters.Where(m => m.Category == (Category)Category.Value);
+            }
+
+            // Filtre pour la difficulté
+            if (Difficulty.HasValue)
+            {
+                monsters = monsters.Where(m => m.Difficulty == (DifficultyMonster)Difficulty.Value);
+            }
+
+            // Filtre pour l'ID de la carte
+            if (MapId.HasValue)
+            {
+                monsters = monsters.Where(m => m.Map.Id == MapId.Value);
+            }
+
+            // Calculer le nombre total avant la pagination
+            var totalCount = await monsters.CountAsync();
+
+            // Appliquer la pagination
+            var items = await monsters
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Vérifier si des résultats ont été trouvés
+            if (!items.Any())
+            {
+                return NotFound(new { Message = "Aucun résultat pour cette recherche." });
+            }
+
+            // Créer l'objet de réponse
+            var response = new
+            {
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Items = items
+            };
+
+            return Ok(response);
+        }
+
+
+
         // GET: api/Monster/GetAll
         [HttpGet("[action]")]
         public async Task<ActionResult<List<Monster>>> GetAll()
