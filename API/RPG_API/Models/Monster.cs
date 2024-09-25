@@ -24,9 +24,9 @@ namespace RPG_API.Models
     }
     public class Monster: ModelBase
     {
+        public string Name { get; set; }
         public DifficultyMonster Difficulty { get; set; }
         public Category Category { get; set; }
-        public string Name { get; set; }
         public int XpGiven { get; set; }
         public int Damage { get; set; }
         public int Armor { get; set; }
