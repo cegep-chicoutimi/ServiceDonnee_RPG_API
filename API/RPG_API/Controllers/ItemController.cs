@@ -33,6 +33,7 @@ namespace RPG_API.Controllers
         [HttpGet("[action]/{name}")]
         public async Task<ActionResult<Item>> GetByName(string name)
         {
+            //TODO: changer pour recherche par nom fonctionne
             Item item = await _context.Item.FindAsync(name);
 
             if (item == null)
@@ -43,15 +44,35 @@ namespace RPG_API.Controllers
         }
         //GET: api/Item/Get/{type}
         [HttpGet("[action]/{type}")]
-        public async Task<ActionResult<Item>> GetByType(Type type)
+        public async Task<ActionResult<Item>> GetByType(string type)
         {
-            Item item = await _context.Item.FindAsync(type);
+            TypeItem typeItem = 0; ;
+            switch (type.ToLower())
+            {
+                case "weapon":
+                    typeItem = TypeItem.weapon;
+                    break;
 
-            if (item == null)
+                case "armor":
+                    typeItem = TypeItem.armor;
+
+                    break;
+
+                case "consumable":
+                    typeItem = TypeItem.consumable;
+                    break;
+                    default:
+                    return NotFound("Aucun item de ce type n'a été trouvé."); 
+
+            }
+
+            var items = await _context.Item.Where(i => i.Type == typeItem).ToListAsync();
+
+            if (items == null)
             {
                 return NotFound();
             }
-            return item;
+            return Ok(items);
         }
         //GET: api/Item/GetAll
         [HttpGet("[action]")]
@@ -66,8 +87,8 @@ namespace RPG_API.Controllers
             return items;
         }
 
-        [HttpGet("SearchItemsByFirstLetter")]
-        public async Task<ActionResult<PaginatedList<Item>>> GetItemsByFirstLetter(string? firstLetter,int? pageNumber,int pageSize )
+        [HttpGet("[action]")]
+        public async Task<ActionResult<PaginatedList<Item>>> SearchItemsByName(string? firstLetter, string? nameContains, int? pageNumber = 1, int pageSize = 10)
         {
             var items = _context.Item.AsQueryable();
 
@@ -76,17 +97,77 @@ namespace RPG_API.Controllers
             {
                 items = items.Where(i => i.Name.StartsWith(firstLetter));
             }
+           
+            if (!string.IsNullOrEmpty(nameContains))
+            {
+                items = items.Where(i => EF.Functions.Like(i.Name, $"%{nameContains}%"));
+            }
+            
 
             // Calculer le nombre total avant la pagination
             var totalCount = await items.CountAsync();
 
             // Utiliser PaginatedList pour créer une liste paginée
-            if(pageSize == null)
-            {
-                pageSize = totalCount;
-            }
             var pagedItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, pageSize);
 
+            // Vérifier si des items ont été trouvés
+            if (totalCount == 0)
+            {
+                return NotFound("Aucun item n'a été trouvé qui correspond à ces critères.");
+            }
+            return Ok(pagedItems);
+        }
+        [HttpGet("[action]")]
+        public async Task<ActionResult<PaginatedList<Item>>> SearchItemByStats(int? minBoostAttack = 0, int? maxBoostAttack = 0,
+            int? minBoostDefence = 0, int? maxBoostDefence = 0,
+            int? minHealthRestoration = 0, int? maxHealthRestoration = 0,
+            int? pageNumber = 1, int pageSize = 10)
+        {
+            var items = _context.Item.AsQueryable();
+
+            // Appliquer les filtres pour les statistiques
+            if (minBoostAttack.HasValue)
+            {
+                items = items.Where(i => i.BoostAttack >= minBoostAttack.Value);
+            }
+
+            if (maxBoostAttack.HasValue)
+            {
+                items = items.Where(i => i.BoostAttack <= maxBoostAttack.Value);
+            }
+
+            if (minBoostDefence.HasValue)
+            {
+                items = items.Where(i => i.BoostDefence >= minBoostDefence.Value);
+            }
+
+            if (maxBoostDefence.HasValue)
+            {
+                items = items.Where(i => i.BoostDefence <= maxBoostDefence.Value);
+            }
+
+            if (minHealthRestoration.HasValue)
+            {
+                items = items.Where(i => i.HealthRestoration >= minHealthRestoration.Value);
+            }
+
+            if (maxHealthRestoration.HasValue)
+            {
+                items = items.Where(i => i.HealthRestoration <= maxHealthRestoration.Value);
+            }
+
+            // Calculer le nombre total avant la pagination
+            var totalCount = await items.CountAsync();
+
+            // Utiliser PaginatedList pour créer une liste paginée
+          
+            var pagedItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            // Vérifier si des items ont été trouvés
+            if (totalCount == 0)
+            {
+                return NotFound("Aucun item n'a été trouvé qui correspond à ces critères.");
+            }
             return Ok(pagedItems);
         }
         //PUT: api/Item/Update/{id}

@@ -4,9 +4,9 @@ namespace RPG_API.Models.Base
 {
     public enum TypeItem
     {
-        Weapon,
-        Armor,
-        Consumable
+        weapon,
+        armor,
+        consumable
     }
     public class Item : ModelBase
     {
