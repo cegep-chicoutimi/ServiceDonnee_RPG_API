@@ -6,8 +6,7 @@ namespace RPG_API.Models.Base
     {
         Weapon,
         Armor,
-        Consumable,
-        Quest
+        Consumable
     }
     public class Item : ModelBase
     {

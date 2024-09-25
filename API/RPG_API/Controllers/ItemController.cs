@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RPG_API.Data.Context;
 using RPG_API.Models.Base;
+using RPG_API.Models;
 
 namespace RPG_API.Controllers
 {
@@ -28,7 +29,30 @@ namespace RPG_API.Controllers
             }
             return item;
         }
+        //GET: api/Item/Get/{name}
+        [HttpGet("[action]/{name}")]
+        public async Task<ActionResult<Item>> GetByName(string name)
+        {
+            Item item = await _context.Item.FindAsync(name);
 
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+        //GET: api/Item/Get/{type}
+        [HttpGet("[action]/{type}")]
+        public async Task<ActionResult<Item>> GetByType(Type type)
+        {
+            Item item = await _context.Item.FindAsync(type);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
         //GET: api/Item/GetAll
         [HttpGet("[action]")]
         public async Task<ActionResult<List<Item>>> GetAll()
@@ -42,9 +66,32 @@ namespace RPG_API.Controllers
             return items;
         }
 
+        [HttpGet("SearchItemsByFirstLetter")]
+        public async Task<ActionResult<PaginatedList<Item>>> GetItemsByFirstLetter(string? firstLetter,int? pageNumber,int pageSize )
+        {
+            var items = _context.Item.AsQueryable();
+
+            // Appliquer le filtre pour le nom qui commence par la première lettre spécifique
+            if (!string.IsNullOrEmpty(firstLetter))
+            {
+                items = items.Where(i => i.Name.StartsWith(firstLetter));
+            }
+
+            // Calculer le nombre total avant la pagination
+            var totalCount = await items.CountAsync();
+
+            // Utiliser PaginatedList pour créer une liste paginée
+            if(pageSize == null)
+            {
+                pageSize = totalCount;
+            }
+            var pagedItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return Ok(pagedItems);
+        }
         //PUT: api/Item/Update/{id}
         [HttpPut("[action]/{id}&{item}")]
-        public async Task<IActionResult> Update(int id, [FromBody]Item item)
+        public async Task<IActionResult> Update(int id, [FromBody] Item item)
         {
 
             if (id != item.Id)
@@ -71,7 +118,7 @@ namespace RPG_API.Controllers
 
         //POST: api/Item/Create
         [HttpPost("[action]/{item}")]
-        public async Task<ActionResult<Item>> Create([FromBody]Item item)
+        public async Task<ActionResult<Item>> Create([FromBody] Item item)
         {
             _context.Item.Add(item);
             try
