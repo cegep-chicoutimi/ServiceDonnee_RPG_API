@@ -30,22 +30,16 @@ namespace RPG_API.Controllers
         }
 
 
-        [HttpGet("Search")]
-        public async Task<ActionResult<IEnumerable<Monster>>> GetMonsters(
-      [FromQuery] string? NameContains,
-      [FromQuery] string? NameStartsBy,
-      [FromQuery] int? Category,
-      [FromQuery] int? Difficulty,
-      [FromQuery] int? MapId,
-      [FromQuery] int pageNumber = 1,
-      [FromQuery] int pageSize = 10)
+        [HttpGet("SearchByName")]
+        public async Task<ActionResult<IEnumerable<Monster>>> SearchByName(
+           [FromQuery] string? NameContains,
+           [FromQuery] string? NameStartsBy,
+           [FromQuery] int pageNumber = 1,
+           [FromQuery] int pageSize = 10)
         {
             // Vérifier si tous les paramètres de recherche sont nuls
             if (string.IsNullOrEmpty(NameContains) &&
-                string.IsNullOrEmpty(NameStartsBy) &&
-                !Category.HasValue &&
-                !Difficulty.HasValue &&
-                !MapId.HasValue)
+                string.IsNullOrEmpty(NameStartsBy))
             {
                 return BadRequest(new { Message = "Aucun filtre de recherche fourni." });
             }
@@ -61,24 +55,6 @@ namespace RPG_API.Controllers
             if (!string.IsNullOrEmpty(NameStartsBy))
             {
                 monsters = monsters.Where(m => m.Name.StartsWith(NameStartsBy));
-            }
-
-            // Filtre pour la catégorie
-            if (Category.HasValue)
-            {
-                monsters = monsters.Where(m => m.Category == (Category)Category.Value);
-            }
-
-            // Filtre pour la difficulté
-            if (Difficulty.HasValue)
-            {
-                monsters = monsters.Where(m => m.Difficulty == (DifficultyMonster)Difficulty.Value);
-            }
-
-            // Filtre pour l'ID de la carte
-            if (MapId.HasValue)
-            {
-                monsters = monsters.Where(m => m.Map.Id == MapId.Value);
             }
 
             // Calculer le nombre total avant la pagination
@@ -108,6 +84,7 @@ namespace RPG_API.Controllers
             return Ok(response);
         }
 
+      
 
 
         // GET: api/Monster/GetAll
