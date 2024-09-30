@@ -2,10 +2,18 @@
 
 namespace RPG_API.Models
 {
+    public enum TileType
+    {
+        Grass,
+        Water,
+        Sand,
+        Forest,
+        Mountain
+    }
 
     public class Tile : ModelBase
     {
-        public int Type { get; set; }
+        public TileType Type { get; set; }
         public int Y {get; set; }
         public int X { get; set; }
         public int MapId { get; set; }

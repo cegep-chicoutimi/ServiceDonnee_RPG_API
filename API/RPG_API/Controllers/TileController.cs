@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RPG_API.Data.Context;
 using RPG_API.Models;
+using RPG_API.Models.Base;
 
 namespace RPG_API.Controllers
 {
@@ -31,19 +32,24 @@ namespace RPG_API.Controllers
 
         // GET: api/Tile/GetAll
         [HttpGet("[action]")]
-        public async Task<ActionResult<List<Tile>>> GetAll()
+        public async Task<ActionResult<PaginatedList<Tile>>> GetAll(int? pageNumber = 1, int pageSize = 10)
         {
-            List<Tile> tiles = await _context.Tile.ToListAsync();
+            var tiles = _context.Tile.AsQueryable();
 
-            if (tiles == null || tiles.FirstOrDefault() == null)
+            var totalCount = await tiles.CountAsync();
+
+            if (totalCount == 0)
             {
-                return NotFound();
+                return NotFound("Aucun item de ce type n'a été trouvé.");
             }
-            return tiles;
+
+            var pagetTiles = await PaginatedList<Tile>.CreateAsync(tiles.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return Ok(pagetTiles);
         }
 
         // PUT: api/Tile/Update/{id}
-        [HttpPut("[action]/{id}&{tile}")]
+        [HttpPut("[action]/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Tile tile)
         {
 
