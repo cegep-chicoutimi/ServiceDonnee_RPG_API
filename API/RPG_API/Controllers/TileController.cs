@@ -40,7 +40,7 @@ namespace RPG_API.Controllers
 
             if (totalCount == 0)
             {
-                return NotFound("Aucun item de ce type n'a été trouvé.");
+                return NotFound("Aucune tuile de ce type n'a été trouvé.");
             }
 
             var pagetTiles = await PaginatedList<Tile>.CreateAsync(tiles.AsNoTracking(), pageNumber ?? 1, pageSize);

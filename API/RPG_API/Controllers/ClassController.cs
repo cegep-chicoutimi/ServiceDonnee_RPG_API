@@ -60,8 +60,7 @@ namespace RPG_API.Controllers
                 return NotFound();
             }
             newClass.Name = classCharacter.Name;
-            //TODO all value changable
-
+           
             try
             {
                 await _context.SaveChangesAsync();
