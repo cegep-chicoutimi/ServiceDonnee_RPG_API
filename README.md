@@ -24,4 +24,4 @@ Utilisation de ORM et DTO pour la communication entre l'API et la BD.
 - Olivier Bergeron-Houde - 1732451 (https://github.com/olivierbh2)
 
 ## Dates de remise <a name="dateRemise"></a>
-???
+Développement de l'API - vendredi 4 octobre
