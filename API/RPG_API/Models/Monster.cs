@@ -32,6 +32,8 @@ namespace RPG_API.Models
         public int Armor { get; set; }
         public int Health { get; set; }
         public ICollection<Quest> Quest { get; set; }
+        public int MapId { get; set; }
+
         public Map Map { get; set; }
     }
 }
