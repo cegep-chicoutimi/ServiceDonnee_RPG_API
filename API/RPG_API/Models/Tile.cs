@@ -2,7 +2,7 @@
 
 namespace RPG_API.Models
 {
-    public enum TileType
+    public enum TypeTile
     {
         Grass,
         Water,
@@ -13,7 +13,7 @@ namespace RPG_API.Models
 
     public class Tile : ModelBase
     {
-        public TileType Type { get; set; }
+        public TypeTile Type { get; set; }
         public int Y {get; set; }
         public int X { get; set; }
         public int MapId { get; set; }
