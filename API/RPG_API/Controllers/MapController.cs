@@ -26,7 +26,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return map;
+            return Ok(map);
         }
 
         // GET: api/Map/GetAll
@@ -39,7 +39,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return maps;
+            return Ok(maps);
         }
 
         // PUT: api/Map/Update/{id}
@@ -78,7 +78,7 @@ namespace RPG_API.Controllers
             _context.Map.Add(map);
             await _context.SaveChangesAsync();
 
-            return Created(map.Id.ToString(), map);
+            return Ok(map);
         }
 
         // DELETE: api/Map/Delete/{id}

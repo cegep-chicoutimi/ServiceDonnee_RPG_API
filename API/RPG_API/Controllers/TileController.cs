@@ -27,7 +27,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return tile;
+            return Ok(tile);
         }
 
         // GET: api/Tile/GetAll
@@ -74,7 +74,7 @@ namespace RPG_API.Controllers
                 BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Tile/Create
@@ -84,7 +84,7 @@ namespace RPG_API.Controllers
             _context.Tile.Add(tile);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Get", new { id = tile.Id }, tile);
+            return Ok(tile);
         }
 
         // DELETE: api/Tile/Delete/{id}

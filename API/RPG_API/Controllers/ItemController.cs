@@ -27,7 +27,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return item;
+            return Ok(item);
         }
         //GET: api/Item/Get/{name}
         [HttpGet("[action]/{name}")]
@@ -39,7 +39,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return item;
+            return Ok(item);
         }
         //GET: api/Item/Get/{type}
         [HttpGet("[action]/{type}")]
@@ -218,7 +218,7 @@ namespace RPG_API.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Created(item.Id.ToString(), item);
+            return Ok(item);
         }
 
         //POST: api/Item/Create
@@ -235,7 +235,7 @@ namespace RPG_API.Controllers
                 return BadRequest(e);
             }
 
-            return Created(item.Id.ToString(), item);
+            return Ok(item);
         }
 
         //DELETE: api/Item/Delete/{id}

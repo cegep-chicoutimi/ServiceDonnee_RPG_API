@@ -26,7 +26,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return monster;
+            return Ok(monster);
         }
 
 
@@ -301,7 +301,7 @@ namespace RPG_API.Controllers
             _context.Monster.Add(monster);
             await _context.SaveChangesAsync();
 
-            return Created(monster.Id.ToString(), monster);
+            return Ok(monster);
         }
 
         // DELETE: api/Monster/Delete/{id}

@@ -27,7 +27,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return quest;
+            return Ok(quest);
         }
         [HttpGet("[action]/{title}")]
         public async Task<ActionResult<Quest>> GetByTitle(string title)
@@ -40,7 +40,7 @@ namespace RPG_API.Controllers
             }
 
 
-            return quest;
+            return Ok(quest);
         }
         //TODO: Filtres
         [HttpGet("[action]/{description}")]
@@ -54,7 +54,7 @@ namespace RPG_API.Controllers
             }
             
             
-            return quest;
+            return Ok(quest);
         }
 
         // GET: api/Quest/GetAll
@@ -169,7 +169,7 @@ namespace RPG_API.Controllers
             _context.Quest.Add(quest);
             await _context.SaveChangesAsync();
 
-            return Created(quest.Id.ToString(), quest);
+            return Ok(quest);
         }
 
         // DELETE: api/Quest/Delete/{id}

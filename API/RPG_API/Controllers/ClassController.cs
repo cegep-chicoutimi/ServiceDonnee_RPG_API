@@ -28,7 +28,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return classCharacter;
+            return Ok(classCharacter);
         }
         //GET: api/Class/Get/{name}
         [HttpGet("[action]/{name}")]
@@ -40,7 +40,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return _class;
+            return Ok(_class);
         }
         //GET: api/Class/GetAll
         [HttpGet("[action]")]
@@ -52,7 +52,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return classCharacter;
+            return Ok(classCharacter);
         }
         //GET: api/Class/SearchItemsByName
         [HttpGet("[action]")]
@@ -111,7 +111,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Class
@@ -128,7 +128,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Created(classCharacter.Id.ToString(), classCharacter);
+            return Ok(classCharacter);
         }
 
         //DELETE: api/Class/id
