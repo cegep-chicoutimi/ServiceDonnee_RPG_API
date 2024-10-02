@@ -30,7 +30,18 @@ namespace RPG_API.Controllers
             }
             return classCharacter;
         }
+        //GET: api/Class/Get/{name}
+        [HttpGet("[action]/{name}")]
+        public async Task<ActionResult<Class>> GetByName(string name)
+        {
+            Class _class = await _context.Class.FirstOrDefaultAsync(i => i.Name == name);
 
+            if (_class == null)
+            {
+                return NotFound();
+            }
+            return _class;
+        }
         //GET: api/Class/GetAll
         [HttpGet("[action]")]
         public async Task<ActionResult<List<Class>>> GetAll()
@@ -42,6 +53,36 @@ namespace RPG_API.Controllers
                 return NotFound();
             }
             return classCharacter;
+        }
+        //GET: api/Class/SearchItemsByName
+        [HttpGet("[action]")]
+        public async Task<ActionResult<PaginatedList<Class>>> SearchItemsByName(string? firstLetter, string? nameContains, int? pageNumber = 1, int pageSize = 10)
+        {
+            var _class = _context.Class.AsQueryable();
+
+            // Appliquer le filtre pour le nom qui commence par la première lettre spécifique
+            if (!string.IsNullOrEmpty(firstLetter))
+            {
+                _class = _class.Where(i => i.Name.StartsWith(firstLetter));
+            }
+
+            if (!string.IsNullOrEmpty(nameContains))
+            {
+                _class = _class.Where(i => EF.Functions.Like(i.Name, $"%{nameContains}%"));
+            }
+
+
+            // Calculer le nombre total avant la pagination
+            var totalCount = await _class.CountAsync();
+
+            // Utiliser PaginatedList pour créer une liste paginée
+            var pagedClass = await PaginatedList<Class>.CreateAsync(_class.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+             if (totalCount == 0)
+            {
+                return NotFound("Aucune classe n'a été trouvé qui correspond à ces critères.");
+            }
+            return Ok(pagedClass);
         }
 
         //PUT: api/Class/Update/{id}
@@ -74,7 +115,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Class
-        [HttpPost("[action]/{class}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Class>> Create([FromBody] Class classCharacter)
         {
             _context.Class.Add(classCharacter);

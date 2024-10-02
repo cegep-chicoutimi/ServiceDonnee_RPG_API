@@ -29,6 +29,18 @@ namespace RPG_API.Controllers
             }
             return character;
         }
+        //GET: api/Character/Get/{name}
+        [HttpGet("[action]/{name}")]
+        public async Task<ActionResult<Character>> GetByName(string name)
+        {
+            Character character = await _context.Character.FirstOrDefaultAsync(i => i.Name == name);
+
+            if (character == null)
+            {
+                return NotFound();
+            }
+            return character;
+        }
         //GET: api/Character/GetAll
         [HttpGet("[action]")]
         public async Task<ActionResult<List<Character>>> GetAll()
@@ -247,7 +259,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Character
-        [HttpPost("[action]/{character}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Character>> Create([FromBody] Character character)
         {
             _context.Character.Add(character);
