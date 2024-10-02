@@ -11,7 +11,7 @@ namespace RPG_API.Controllers
     public class CharacterController : ControllerBase
     {
         private readonly APIContext _context;
-
+        //TODO: changer TOUS les messages d'erreur de FR à EN
         public CharacterController(APIContext context)
         {
             _context = context;
