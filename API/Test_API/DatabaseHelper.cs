@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Test_API
 {
-    internal class DatabaseHelper
+    public class DatabaseHelper
     {
         public APIContext CreateContext()
         {
