@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RPG_API.Data.Context;
 using RPG_API.Models;
+using RPG_API.Models.Base;
 
 namespace RPG_API.Controllers
 {
@@ -9,6 +10,7 @@ namespace RPG_API.Controllers
     [ApiController]
     public class MonsterController : ControllerBase
     {
+        
         private readonly APIContext _context;
 
         public MonsterController(APIContext context)
@@ -29,6 +31,110 @@ namespace RPG_API.Controllers
             return monster;
         }
 
+        //GET: api/Monster/Get/{difficulty}
+        [HttpGet("[action]/{difficulty}")]
+        public async Task<ActionResult<PaginatedList<Monster>>> GetByDifficulty(int difficulty, int? pageNumber = 1, int pageSize = 10)
+        {
+            DifficultyMonster difficultyMonster;
+
+            switch (difficulty)
+            {
+                case 0:
+                    difficultyMonster = DifficultyMonster.Easy;
+                    break;
+
+                case 1:
+                    difficultyMonster = DifficultyMonster.Medium;
+                    break;
+
+                case 2:
+                    difficultyMonster = DifficultyMonster.Hard;
+                    break;
+
+                case 3:
+                    difficultyMonster = DifficultyMonster.Boss;
+                    break;
+
+                default:
+                    return NotFound("Aucun monstre de cette difficulté n'a été trouvé.");
+            }
+
+            var monsters = _context.Monster.Where(i => i.Difficulty == difficultyMonster).AsQueryable();
+
+            var totalCount = await monsters.CountAsync();
+
+            if (totalCount == 0)
+            {
+                return NotFound("Aucun monstre de cette difficulté n'a été trouvé.");
+            }
+
+            // Apply pagination using PaginatedList
+            var pagedMonsters = await PaginatedList<Monster>.CreateAsync(monsters.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            // Return the paginated list
+            return Ok(pagedMonsters);
+        }
+        //GET: api/Monster/Get/{category}
+        [HttpGet("[action]/{category}")]
+        public async Task<ActionResult<PaginatedList<Monster>>> GetByCategory(int category, int? pageNumber = 1, int pageSize = 10)
+        {
+            Category categoryMonster;
+
+            switch (category)
+            {
+                case 0:
+                    categoryMonster = Category.Spirit;
+                    break;
+
+                case 1:
+                    categoryMonster = Category.Demon;
+                    break;
+
+                case 2:
+                    categoryMonster = Category.Undead;
+                    break;
+
+                case 3:
+                    categoryMonster = Category.Giant;
+                    break;
+                case 4:
+                    categoryMonster = Category.Chimera;
+                    break;
+                case 5:
+                    categoryMonster = Category.Dragon;
+                    break;
+                case 6:
+                    categoryMonster = Category.Vampire;
+                    break;
+                case 7:
+                    categoryMonster = Category.Aquatic;
+                    break;
+                case 8:
+                    categoryMonster = Category.Flying;
+                    break;
+                case 9:
+                    categoryMonster = Category.Insect;
+                    break;
+
+                default:
+                    return NotFound("Aucun monstre de cette categorie n'a été trouvé.");
+            }
+
+            var monsters = _context.Monster.Where(i => i.Category == categoryMonster).AsQueryable();
+
+            var totalCount = await monsters.CountAsync();
+
+            if (totalCount == 0)
+            {
+                return NotFound("Aucun monstre de cette categorie n'a été trouvé.");
+            }
+
+            // Apply pagination using PaginatedList
+            var pagedMonsters = await PaginatedList<Monster>.CreateAsync(monsters.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            // Return the paginated list
+            return Ok(pagedMonsters);
+        }
 
         [HttpGet("SearchByName")]
         public async Task<ActionResult<IEnumerable<Monster>>> SearchByName(

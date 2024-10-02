@@ -27,7 +27,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return character;
+            return Ok(character);
         }
         //GET: api/Character/Get/{name}
         [HttpGet("[action]/{name}")]
@@ -39,7 +39,19 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return character;
+            return Ok(character);
+        }
+        //GET: api/Character/Get/{name}
+        [HttpGet("[action]/{class}")]
+        public async Task<ActionResult<Character>> GetByClass(int classId)
+        {
+            Character character = await _context.Character.FirstOrDefaultAsync(i => i.ClassId == classId);
+
+            if (character == null)
+            {
+                return NotFound("Aucun caract`re pour cette classe trouvé");
+            }
+            return Ok(character);
         }
         //GET: api/Character/GetAll
         [HttpGet("[action]")]
@@ -51,7 +63,7 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            return characters;
+            return Ok(characters);
         }
         //PUT: api/Character/Update/{id}
         [HttpPut("[action]/{id}")]
@@ -80,7 +92,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
         [HttpPut("[action]/{id}&{xp}")]
         public async Task<IActionResult> UpdateXP(int id, int xp, [FromBody] Character character)
@@ -108,7 +120,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
         [HttpPut("[action]/{id}&{damage}")]
         public async Task<IActionResult> UpdateDamage(int id, int damage, [FromBody] Character character)
@@ -136,7 +148,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
         [HttpPut("[action]/{id}&{armor}")]
         public async Task<IActionResult> UpdateArmor(int id, int armor, [FromBody] Character character)
@@ -164,7 +176,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
         [HttpPut("[action]/{id}&{lives}")]
         public async Task<IActionResult> UpdateLives(int id, int lives, [FromBody] Character character)
@@ -192,7 +204,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         [HttpPut("[action]/{id}&{questid}")]
@@ -221,7 +233,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         //PUT :api/Character/UpdateInventaire/{id}&{itemid}
@@ -255,7 +267,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Character
@@ -272,7 +284,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Created(character.Id.ToString(), character);
+            return Ok(character);
         }
 
         //DELETE: api/Character/id

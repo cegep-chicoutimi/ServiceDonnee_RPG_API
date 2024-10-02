@@ -28,72 +28,101 @@ namespace Test_API
 
             return new APIContext(builder.Options);
         }
+
         public void CreateRPGTables(APIContext context)
         {
             context.Database.EnsureCreated();
 
-            // Initialiser les classes
+            CreateClasses(context);
+            CreateItems(context);
+            CreateCharacters(context);
+            CreateMaps(context);
+            CreateMonsters(context);
+            CreateQuests(context);
+            CreateTiles(context);
+        }
+
+        private void CreateClasses(APIContext context)
+        {
             Class[] classes = new Class[]
             {
-        new Class { Name = "Guerrier", BoostAttack = 10.5, BoostDefence = 7.2 },
-        new Class { Name = "Mage", BoostAttack = 15.0, BoostDefence = 3.5 }
+            new Class { Name = "Guerrier", BoostAttack = 10.5, BoostDefence = 7.2 },
+            new Class { Name = "Mage", BoostAttack = 15.0, BoostDefence = 3.5 }
             };
             context.AddRange(classes);
-
-            // Initialiser les items
-            Item[] items = new Item[]
-            {
-        new Item { Name = "Épée", BoostAttack = 10, BoostDefence = 5, HealthRestoration = 0, Type = TypeItem.weapon },
-        new Item { Name = "Bouclier", BoostAttack = 2, BoostDefence = 12, HealthRestoration = 0, Type = TypeItem.armor},
-        new Item { Name = "Potion", BoostAttack = 0, BoostDefence = 2, HealthRestoration = 10, Type = TypeItem.consumable}
-            };
-            context.AddRange(items);
-
-            // Initialiser les personnages
-            Character[] characters = new Character[]
-            {
-        new Character { Name = "Arthur", Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 },
-        new Character { Name = "Merlin", Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2 }
-            };
-            context.AddRange(characters);
-
-            // Initialiser les cartes
-            Map[] maps = new Map[]
-            {
-        new Map { CharacterId = 1, ImageUrl = "map1.png" },
-        new Map { CharacterId = 2, ImageUrl = "map2.png" }
-            };
-            context.AddRange(maps);
-
-            // Initialiser les monstres
-            Monster[] monsters = new Monster[]
-            {
-        new Monster { Name = "Dragon", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
-        new Monster { Name = "Elf", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Medium, MapId = 1, Category = Category.Chimera },
-        new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon }
-            };
-            context.AddRange(monsters);
-
-            // Initialiser les quêtes
-            Quest[] quests = new Quest[]
-            {
-        new Quest { Title = "Tuer le dragon", Description = "Vaincre le dragon pour sauver le village", Reward = 500, ItemId = 1 },
-        new Quest { Title = "Trouver l'épée légendaire", Description = "Récupérer l'épée légendaire cachée dans les montagnes", Reward = 300, ItemId = 2 }
-            };
-            context.AddRange(quests);
-
-            // Initialiser les tuiles (Tiles)
-            Tile[] tiles = new Tile[]
-            {
-        new Tile { X = 0, Y = 0, Type = TypeTile.Sand, MapId = 1 },
-        new Tile { X = 1, Y = 0, Type = TypeTile.Grass, MapId = 1 },
-        new Tile { X = 0, Y = 1, Type = TypeTile.Mountain, MapId = 2 },
-        new Tile { X = 1, Y = 1, Type = TypeTile.Water, MapId = 2 }
-            };
-            context.AddRange(tiles);
-
             context.SaveChanges();
         }
+
+        private void CreateItems(APIContext context)
+        {
+            Item[] items = new Item[]
+            {
+            new Item { Name = "Épée", BoostAttack = 10, BoostDefence = 5, HealthRestoration = 0, Type = TypeItem.weapon },
+            new Item { Name = "Bouclier", BoostAttack = 2, BoostDefence = 12, HealthRestoration = 0, Type = TypeItem.armor },
+            new Item { Name = "Potion", BoostAttack = 0, BoostDefence = 2, HealthRestoration = 10, Type = TypeItem.consumable }
+            };
+            context.AddRange(items);
+            context.SaveChanges();
+        }
+
+        private void CreateCharacters(APIContext context)
+        {
+            Character[] characters = new Character[]
+            {
+            new Character { Name = "Arthur", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 },
+            new Character { Name = "Merlin", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2 }
+            };
+            context.AddRange(characters);
+            context.SaveChanges();
+        }
+
+        private void CreateMaps(APIContext context)
+        {
+            Map[] maps = new Map[]
+            {
+            new Map { CharacterId = 1, ImageUrl = "map1.png" },
+            new Map { CharacterId = 2, ImageUrl = "map2.png" }
+            };
+            context.AddRange(maps);
+            context.SaveChanges();
+        }
+
+        private void CreateMonsters(APIContext context)
+        {
+            Monster[] monsters = new Monster[]
+            {
+            new Monster { Name = "Dragon", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
+            new Monster { Name = "Elf", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Medium, MapId = 1, Category = Category.Chimera },
+            new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon }
+            };
+            context.AddRange(monsters);
+            context.SaveChanges();
+        }
+
+        private void CreateQuests(APIContext context)
+        {
+            Quest[] quests = new Quest[]
+            {
+            new Quest { Title = "Tuer le dragon", Description = "Vaincre le dragon pour sauver le village", Reward = 500, ItemId = 1 },
+            new Quest { Title = "Trouver l'épée légendaire", Description = "Récupérer l'épée légendaire cachée dans les montagnes", Reward = 300, ItemId = 2 }
+            };
+            context.AddRange(quests);
+            context.SaveChanges();
+        }
+
+        private void CreateTiles(APIContext context)
+        {
+            Tile[] tiles = new Tile[]
+            {
+            new Tile { X = 0, Y = 0, Type = TypeTile.Sand, MapId = 1 },
+            new Tile { X = 1, Y = 0, Type = TypeTile.Grass, MapId = 1 },
+            new Tile { X = 0, Y = 1, Type = TypeTile.Mountain, MapId = 2 },
+            new Tile { X = 1, Y = 1, Type = TypeTile.Water, MapId = 2 }
+            };
+            context.AddRange(tiles);
+            context.SaveChanges();
+        }
+
         public void DropTestTables(APIContext context)
         {
             context.Database.EnsureDeleted();

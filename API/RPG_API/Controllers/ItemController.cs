@@ -43,21 +43,21 @@ namespace RPG_API.Controllers
         }
         //GET: api/Item/Get/{type}
         [HttpGet("[action]/{type}")]
-        public async Task<ActionResult<PaginatedList<Item>>> GetByType(string type, int? pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<PaginatedList<Item>>> GetByType(int type, int? pageNumber = 1, int pageSize = 10)
         {
             TypeItem typeItem;
 
-            switch (type.ToLower())
+            switch (type)
             {
-                case "weapon":
+                case 0:
                     typeItem = TypeItem.weapon;
                     break;
 
-                case "armor":
+                case 1:
                     typeItem = TypeItem.armor;
                     break;
 
-                case "consumable":
+                case 2:
                     typeItem = TypeItem.consumable;
                     break;
 
