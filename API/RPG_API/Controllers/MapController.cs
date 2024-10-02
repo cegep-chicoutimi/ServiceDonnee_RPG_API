@@ -72,7 +72,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Map/Create
-        [HttpPost("[action]/{map}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Map>> Create([FromBody] Map map)
         {
             _context.Map.Add(map);

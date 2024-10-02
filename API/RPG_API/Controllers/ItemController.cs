@@ -222,7 +222,7 @@ namespace RPG_API.Controllers
         }
 
         //POST: api/Item/Create
-        [HttpPost("[action]/{item}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Item>> Create([FromBody] Item item)
         {
             _context.Item.Add(item);

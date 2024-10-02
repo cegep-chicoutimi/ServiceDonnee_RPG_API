@@ -266,7 +266,7 @@ namespace RPG_API.Controllers
 
 
         // PUT: api/Monster/Update/{id}
-        [HttpPut("[action]/{id}&{monster}")]
+        [HttpPut("[action]/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody]Monster monster)
         {
 
@@ -295,7 +295,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Monster/Create
-        [HttpPost("[action]/{monster}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Monster>> Create([FromBody] Monster monster)
         {
             _context.Monster.Add(monster);

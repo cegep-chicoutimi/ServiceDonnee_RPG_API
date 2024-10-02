@@ -78,7 +78,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Tile/Create
-        [HttpPost("[action]/{tile}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Tile>> Create([FromBody] Tile tile)
         {
             _context.Tile.Add(tile);

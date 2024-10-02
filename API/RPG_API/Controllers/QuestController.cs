@@ -163,7 +163,7 @@ namespace RPG_API.Controllers
         }
 
         // POST: api/Quest/Create
-        [HttpPost("[action]/{quest}")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Quest>> Create([FromBody] Quest quest)
         {
             _context.Quest.Add(quest);
