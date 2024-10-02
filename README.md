@@ -1,12 +1,12 @@
 # ServiceDonnee_RPG
 Service de données - Olivier Bergeron-Houde, Samara Boudreault, Jérôme Savard
 
-## Table des matières  
+## Table des matières
 1. [API](#API)
-i. [Description](#descriptionAPI)
+   - [Description](#descriptionAPI)
 2. [Jeu](#Jeu)
-      i. [Description](#descriptionJeu)
-3. [Crédits et répartition des tâches](#credit)
+   - [Description](#descriptionJeu)
+3. [Crédits et répartition des tâches](#credits)
 4. [Date de remise](#dateRemise)
 
 ## API <a name="API"></a>
@@ -18,7 +18,7 @@ Utilisation de ORM et DTO pour la communication entre l'API et la BD.
 ## Jeu RPG <a name="Jeu"></a>
 ### Description  <a name="descriptionJeu"></a>
 
-## Crédits <a name="credit"></a>
+## Crédits <a name="credits"></a>
 - Jérôme Savard - 2131272 (https://github.com/2131272)
 - Samara Boudreault - 2230912 (https://github.com/Ptit-Poulet)
 - Olivier Bergeron-Houde - 1732451 (https://github.com/olivierbh2)
