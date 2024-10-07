@@ -190,9 +190,50 @@ namespace Test_API
             result.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }
         //updatexp
+        [TestMethod]
+        public async Task TestUpdateXp()
+        {
+            
+        }
         //updatedamage
+        [TestMethod]
+        public async Task TestUpdateDamage()
+        {
+            
+        }
         //updatearmor
+        [TestMethod]
+        public async Task TestUpdateArmor()
+        {
+            
+        }
         //updatelives
+        [TestMethod]
+        public async Task TestUpdateLives()
+        {
+            
+        }
+        //updatexp
+        [TestMethod]
+        public async Task TestUpdateXpNot()
+        {
+
+        }
+        [TestMethod]
+        public async Task TestUpdateDamageNot()
+        {
+
+        }
+        [TestMethod]
+        public async Task TestUpdateArmorNot()
+        {
+
+        }
+        [TestMethod]
+        public async Task TestUpdateLivesNot()
+        {
+
+        }
         //AddItem
         [TestMethod]
         public async Task TestAddItem()
@@ -209,6 +250,18 @@ namespace Test_API
         //NOt
         //TODO: BadRequest
         //AddQuest
+        [TestMethod]
+        public async Task TestAddQuest()
+        {
+            //IActionResult actionResult = await controller.AddItemToInventory(1, 1);
+
+            //// Makes sure the result is not null
+            //actionResult.Should().NotBeNull();
+
+            //// Gets the object from the action result
+            //actionResult.Should().Be((int)HttpStatusCode.OK);
+
+        }
         //NOt
         //Delete
         //NOt
