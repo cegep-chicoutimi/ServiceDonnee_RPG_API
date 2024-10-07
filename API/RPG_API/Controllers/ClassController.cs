@@ -144,7 +144,7 @@ namespace RPG_API.Controllers
             _context.Class.Remove(classCharacter);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(classCharacter);
         }
         private bool ClassExists(int id)
         {
