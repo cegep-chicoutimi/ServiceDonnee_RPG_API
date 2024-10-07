@@ -168,7 +168,7 @@ namespace Test_API
         public async Task TestCreate_BadRequest()
         {
             
-            Class invalidClass = new Class { Name = "", BoostAttack = 3, BoostDefence = 1 };
+            Class invalidClass = new Class { BoostAttack = 3, BoostDefence = 1 };
             ActionResult<Class> actionResult = await controller.Create(invalidClass);
 
             actionResult.Result.Should().BeOfType<BadRequestResult>();
