@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using RPG_API.Controllers;
 using RPG_API.Data.Context;
+using RPG_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,14 @@ namespace Test_API
 
             tiles.Should().NotBeNull();
             tiles.Count().Should().Be(4);
+
+            // Test an individual tile
+            Tile? tile = tiles.FirstOrDefault();
+            tile.Should().NotBeNull();
+            tile.Id.Should().Be(1);
+            tile.X.Should().Be(0);
+            tile.Y.Should().Be(0);
+            tile.Type.Should().Be(TypeTile.Sand);
         }
 
         [TestMethod]
@@ -62,6 +71,7 @@ namespace Test_API
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
+            // Test the tile
             Tile tile = result.Value as Tile;
             tile.Should().NotBeNull();
             tile.Id.Should().Be(1);
@@ -74,18 +84,50 @@ namespace Test_API
         [TestMethod]
         public async Task TestUpdate()
         {
+            // Create a new tile to update the old one
+            Tile tile = new Tile();
+            tile.Id = 1;
+            tile.MapId = 1;
+            tile.X = 5;
+            tile.Y = 5;
+            tile.Type = TypeTile.Water;
+
+            ActionResult<Tile> actionResult = await controller.Update(1, tile);
+            actionResult.Should().NotBeNull();
+            ObjectResult? result = actionResult.Result as ObjectResult;
+            result.Should().NotBeNull();
+
+            result.StatusCode.Should().Be(200);
         }
 
         [TestMethod]
         public async Task TestAdd()
         {
+            // Create a new tile to update the old one
+            Tile tile = new Tile();
+            tile.Id = 5;
+            tile.MapId = 1;
+            tile.X = 10;
+            tile.Y = 10;
+            tile.Type = TypeTile.Grass;
 
+            ActionResult<Tile> actionResult = await controller.Create(tile); 
+            actionResult.Should().NotBeNull();
+            ObjectResult? result = actionResult.Result as ObjectResult;
+            result.Should().NotBeNull();
+
+            result.StatusCode.Should().Be(200);
         }
 
         [TestMethod]
         public async Task TestDelete()
         {
+            ActionResult<Tile> actionResult = await controller.Delete(4);
+            actionResult.Should().NotBeNull();
+            ObjectResult? result = actionResult.Result as ObjectResult;
+            result.Should().NotBeNull();
 
+            result.StatusCode.Should().Be(200);
         }
 
         [TestCleanup]

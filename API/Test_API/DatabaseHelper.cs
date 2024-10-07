@@ -31,6 +31,7 @@ namespace Test_API
 
         public void CreateRPGTables(APIContext context)
         {
+            DropTestTables(context);
             context.Database.EnsureCreated();
 
             CreateClasses(context);
