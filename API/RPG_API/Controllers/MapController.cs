@@ -76,7 +76,14 @@ namespace RPG_API.Controllers
         public async Task<ActionResult<Map>> Create([FromBody] Map map)
         {
             _context.Map.Add(map);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Les données fournies sont invalides");
+            }
 
             return Ok(map);
         }

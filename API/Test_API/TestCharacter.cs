@@ -21,7 +21,7 @@ namespace Test_API
         private APIContext context;
         private CharacterController controller;
         private DatabaseHelper databaseHelper;
-
+       
         [TestInitialize]
         public void Initialize()
         {
@@ -71,30 +71,25 @@ namespace Test_API
         {
             ActionResult<List<Character>> actionResult = await controller.GetAll();
 
-            // Gets the object from the action result
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
             result.Should().NotBeNull();
             actionResult.Should().NotBeNull();
 
-            // Makes sure we got a success status code
             result.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-            List<Character> fruits = result.Value as List<Character>;
+            List<Character> characters = result.Value as List<Character>;
 
-            fruits.Should().NotBeNull();
-            fruits.Count().Should().Be(2);
+            characters.Should().NotBeNull();
+            characters.Count().Should().Be(2);
         }
         [TestMethod]
         public async Task TestGetName()
         {
             ActionResult<Character> actionResult = await controller.GetByName("Merlin");
 
-            // Gets the object from the action result
-            ObjectResult? result = actionResult.Result as ObjectResult;
+           ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
@@ -112,14 +107,11 @@ namespace Test_API
         {
             ActionResult<Character> actionResult = await controller.GetByName("Morgana");
 
-            // Gets the object from the action result
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
-            // Makes sure we got the 404 code
             result.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
         [TestMethod]
@@ -127,10 +119,9 @@ namespace Test_API
         {
             ActionResult<Character> actionResult = await controller.GetByClass(2);
 
-            // Gets the object from the action result
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
+           
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
@@ -148,14 +139,11 @@ namespace Test_API
         {
             ActionResult<Character> actionResult = await controller.GetByClass(6);
 
-            // Gets the object from the action result
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
-            // Makes sure we got the 404 code
             result.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
         //Create
@@ -165,10 +153,8 @@ namespace Test_API
             Character c = new Character { Name = "Guenièvre", Armor = 5, Damage = 30, Lives = 2, Xp = 150, ClassId = 1 };
             ActionResult<Character> actionResult = await controller.Create(c);
 
-            // Gets the object from the action result
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
@@ -177,7 +163,7 @@ namespace Test_API
         [TestMethod]
         public async Task TestCreateNot()
         {
-            Character c = new Character { Name = "Guenièvre" };
+            Character c = new Character { Name = "NotValide" };
             ActionResult<Character> actionResult = await controller.Create(c);
 
             // Gets the object from the action result
@@ -193,46 +179,94 @@ namespace Test_API
         [TestMethod]
         public async Task TestUpdateXp()
         {
-          //TODO  
+             IActionResult actionResult = await controller.UpdateXP(1, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
         }
         //updatedamage
         [TestMethod]
         public async Task TestUpdateDamage()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateDamage(1, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
         }
         //updatearmor
         [TestMethod]
         public async Task TestUpdateArmor()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateArmor(1, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
         }
         //updatelives
         [TestMethod]
         public async Task TestUpdateLives()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateLives(1, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
         }
         //updatexp
         [TestMethod]
         public async Task TestUpdateXpNot()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateXP(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+
         }
         [TestMethod]
         public async Task TestUpdateDamageNot()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateDamage(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+
         }
         [TestMethod]
         public async Task TestUpdateArmorNot()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateArmor(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+
         }
         [TestMethod]
         public async Task TestUpdateLivesNot()
         {
-            //TODO
+            IActionResult actionResult = await controller.UpdateLives(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+
         }
         //AddItem
         [TestMethod]
@@ -240,24 +274,23 @@ namespace Test_API
         {
             IActionResult actionResult = await controller.AddItemToInventory(1, 1);
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
-           
-            // Gets the object from the action result
-           actionResult.Should().Be((int)HttpStatusCode.OK);
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         }
         //AddItemNot
         [TestMethod]
         public async Task TestAddItemNot()
         {
-            IActionResult actionResult = await controller.AddItemToInventory(1, 1);
+            IActionResult actionResult = await controller.AddItemToInventory(1000, 1);
 
-            // Makes sure the result is null
-            actionResult.Should().BeNull();
+            actionResult.Should().NotBeNull();
+            actionResult.Should().NotBeNull();
 
-            // Gets the object from the action result
-            actionResult.Should().Be((int)HttpStatusCode.NotFound);
+            actionResult.Should().BeOfType<NotFoundResult>()
+              .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
 
         }
         //AddQuest
@@ -266,33 +299,83 @@ namespace Test_API
         {
             IActionResult actionResult = await controller.AddQuest(1, 1);
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
 
-            // Gets the object from the action result
-            actionResult.Should().Be((int)HttpStatusCode.OK);
+            actionResult.Should().BeOfType<OkObjectResult>()
+           .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
         //AddQuestNot
         [TestMethod]
         public async Task TestAddQuestNot()
         {
-            IActionResult actionResult = await controller.AddQuest(1, 1);
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
 
-            // Makes sure the result is not null
             actionResult.Should().NotBeNull();
 
-            // Gets the object from the action result
-            actionResult.Should().Be((int)HttpStatusCode.OK);
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
-        //NOt
-        //TODO: BadRequest
-        //NOt
-        //Delete
-        //NOt
-        //deleteItem
-        //NOt
-        //deleteQuest
-        //NOt
+
+        [TestMethod]
+        public async Task TestDelete()
+        {
+            IActionResult actionResult = await controller.Delete(1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        }
+        [TestMethod]
+        public async Task TestDeleteItem()
+        {
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+             .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        }
+        [TestMethod]
+        public async Task TestDeleteQuest()
+        {
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        }
+        [TestMethod]
+        public async Task TestDeleteNot()
+        {
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        }
+        [TestMethod]
+        public async Task TestDeleteItemNot()
+        {
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        }
+        [TestMethod]
+        public async Task TestDeleteQuestNot()
+        {
+            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            actionResult.Should().NotBeNull();
+
+            actionResult.Should().BeOfType<NotFoundResult>()
+            .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        }
 
         [TestCleanup]
         public void Cleanup()
