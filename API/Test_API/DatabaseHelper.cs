@@ -70,8 +70,8 @@ namespace Test_API
         {
             Character[] characters = new Character[]
             {
-            new Character { Name = "Arthur", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 },
-            new Character { Name = "Merlin", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2 }
+            new Character { Name = "Arthur", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 , Quests = new  List<Quest>()},
+            new Character { Name = "Merlin", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2, Quests = new  List<Quest>() }
             };
             context.AddRange(characters);
             context.SaveChanges();
