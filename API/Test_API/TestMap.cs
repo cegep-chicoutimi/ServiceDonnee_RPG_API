@@ -109,24 +109,24 @@ namespace Test_API
         [TestMethod]
         public async Task TestUpdate()
         {
-            //TODO
-            Map m = new Map { CharacterId = 2, ImageUrl = "map2.png" };
-            IActionResult actionResult = await controller.Update(1,m);
+            Map m = new Map {Id=2, CharacterId = 2, ImageUrl = "map2.png" };
+            IActionResult actionResult = await controller.Update(2,m);
 
             actionResult.Should().NotBeNull();
-
-            actionResult.Should().Be((int)HttpStatusCode.OK);
+            actionResult.Should().BeOfType<OkResult>();
+            (actionResult as OkResult).StatusCode.Should().Be(200);
         }
         [TestMethod]
         public async Task TestUpdateNot()
         {
-            //TODO
+            
             Map m = new Map { CharacterId = 2, ImageUrl = "map2.png" };
             IActionResult actionResult = await controller.Update(1, m);
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<BadRequestObjectResult>()
+
+            actionResult.Should().BeAssignableTo<BadRequestResult>()
             .Which.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }
         [TestMethod]
@@ -137,18 +137,17 @@ namespace Test_API
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<OkObjectResult>()
-             .Which.StatusCode.Should().Be((int)HttpStatusCode.OK);
+            actionResult.Result.Should().BeOfType<OkResult>();
+            ((OkResult)actionResult.Result).StatusCode.Should().Be(200);
         }
         [TestMethod]
         public async Task TestDeleteNot()
         {
-            //TODO
-            ActionResult<Map> actionResult = await controller.Delete(5);
+           ActionResult<Map> actionResult = await controller.Delete(5);
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<NotFoundObjectResult>()
+            actionResult.Result.Should().BeOfType<NotFoundResult>()
             .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
         [TestCleanup]
