@@ -37,7 +37,7 @@ namespace RPG_API.Controllers
 
             if (character == null)
             {
-                return NotFound();
+                return NotFound("Aucun caractère pour ce nom trouvé");
             }
             return Ok(character);
         }
