@@ -89,8 +89,6 @@ namespace Test_API
             classes.Should().HaveCountGreaterThan(0);
         }
 
-     
-
         [TestMethod]
         public async Task TestSearchByName()
         {

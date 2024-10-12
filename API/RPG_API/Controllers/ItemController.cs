@@ -251,7 +251,7 @@ namespace RPG_API.Controllers
             _context.Item.Remove(item);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("L'item a été supprimé.");
         }
 
         private bool ItemExists(int id)

@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore.Update;
+using RPG_API.Models.Base;
 
 namespace Test_API
 {
@@ -21,7 +23,7 @@ namespace Test_API
         private APIContext context;
         private CharacterController controller;
         private DatabaseHelper databaseHelper;
-       
+
         [TestInitialize]
         public void Initialize()
         {
@@ -88,7 +90,7 @@ namespace Test_API
         {
             ActionResult<Character> actionResult = await controller.GetByName("Merlin");
 
-           ObjectResult? result = actionResult.Result as ObjectResult;
+            ObjectResult? result = actionResult.Result as ObjectResult;
 
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
@@ -121,7 +123,7 @@ namespace Test_API
 
             ObjectResult? result = actionResult.Result as ObjectResult;
 
-           
+
             actionResult.Should().NotBeNull();
             result.Should().NotBeNull();
 
@@ -179,7 +181,7 @@ namespace Test_API
         [TestMethod]
         public async Task TestUpdateXp()
         {
-             IActionResult actionResult = await controller.UpdateXP(1, 1);
+            IActionResult actionResult = await controller.UpdateXP(1, 1);
 
             actionResult.Should().NotBeNull();
 
@@ -329,7 +331,16 @@ namespace Test_API
         [TestMethod]
         public async Task TestDeleteItem()
         {
-            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            Item i = new Item { Name = "Potion", BoostAttack = 0, BoostDefence = 2, HealthRestoration = 10, Type = TypeItem.consumable };
+
+            context.AddRange(i);
+            context.SaveChanges();
+            Character ch = new Character { Name = "Lena", Inventory = new List<Item> { i }, Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1, Quests = new List<Quest>() };
+            
+            context.AddRange(ch);
+            context.SaveChanges();
+            IActionResult actionResult = await controller.DeleteItemFromInventory(ch.Id, i.Id);
 
             actionResult.Should().NotBeNull();
 
@@ -339,7 +350,16 @@ namespace Test_API
         [TestMethod]
         public async Task TestDeleteQuest()
         {
-            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+
+            Quest q = new Quest { Title = "Tuer le dragon", Description = "Vaincre le dragon pour sauver le village", Reward = 500, ItemId = 1 };
+            context.AddRange(q);
+            context.SaveChanges();
+            Character ch = new Character { Name = "Lena", Inventory = new List<Item> (), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1, Quests = new List<Quest> { q} };
+
+            context.AddRange(ch);
+            context.SaveChanges();
+            IActionResult actionResult = await controller.DeleteQuest(ch.Id, q.Id);
 
             actionResult.Should().NotBeNull();
 
@@ -349,31 +369,32 @@ namespace Test_API
         [TestMethod]
         public async Task TestDeleteNot()
         {
-            IActionResult actionResult = await controller.AddQuest(1000, 1);
+            IActionResult actionResult = await controller.Delete(1000);
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<NotFoundResult>()
+            actionResult.Should().BeOfType<NotFoundObjectResult>()
             .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
         [TestMethod]
         public async Task TestDeleteItemNot()
         {
-            IActionResult actionResult = await controller.AddQuest(1000, 1);
+
+            IActionResult actionResult = await controller.DeleteItemFromInventory(1000, 1);
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<NotFoundResult>()
+            actionResult.Should().BeOfType<NotFoundObjectResult>()
             .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
         [TestMethod]
         public async Task TestDeleteQuestNot()
         {
-            IActionResult actionResult = await controller.AddQuest(1000, 1);
+            IActionResult actionResult = await controller.DeleteQuest(1000, 1);
 
             actionResult.Should().NotBeNull();
 
-            actionResult.Should().BeOfType<NotFoundResult>()
+            actionResult.Should().BeOfType<NotFoundObjectResult>()
             .Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
 
