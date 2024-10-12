@@ -132,7 +132,6 @@ namespace Test_API
         [TestMethod]
         public async Task TestDelete()
         {
-            //TODO
             ActionResult<Map> actionResult = await controller.Delete(1);
 
             actionResult.Should().NotBeNull();

@@ -17,7 +17,7 @@ namespace Test_API
             context = databaseHelper.CreateContext();
             databaseHelper.CreateRPGTables(context);
             controller = new MonsterController(context);
-        }
+        }//TODO testMonster
 
         [TestCleanup]
         public void Cleanup()
