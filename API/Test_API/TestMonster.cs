@@ -186,7 +186,7 @@ namespace Test_API
                 pageNumber: 1,
                 pageSize: 10);
 
-            actionResult.Result.Should().BeOfType<BadRequestResult>();
+            actionResult.Result.Should().BeOfType<BadRequestObjectResult>();
         }
 
 
