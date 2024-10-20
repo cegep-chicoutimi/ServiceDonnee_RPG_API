@@ -21,12 +21,12 @@ namespace Test_API
             context = databaseHelper.CreateContext();
             databaseHelper.CreateRPGTables(context);
             controller = new MonsterController(context);
-        }//TODO testMonster
+        }
 
         [TestMethod]
         public async Task TestGetMonsterById()
         {
-            // Récupérer le monstre avec l'ID 1 (Dragon)
+            
             ActionResult<Monster> actionResult = await controller.Get(1);
 
             ObjectResult? result = actionResult.Result as ObjectResult;
@@ -115,6 +115,22 @@ namespace Test_API
         }
 
 
+        [TestMethod]
+        public async Task TestSearchByName_ContainsStartsBy()
+        {
+            // Act
+            var actionResult = await controller.SearchByName(NameContains: "rag", NameStartsBy: "Dra", pageNumber: 1, pageSize: 10);
+
+            // Assert
+            var okResult = actionResult.Result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeAssignableTo<object>().Subject;
+            var items = response.GetType().GetProperty("Items").GetValue(response) as List<Monster>;
+
+            items.Should().NotBeNull();
+            items.Should().HaveCountGreaterThan(0);
+            items.Should().OnlyContain(m => m.Name.Contains("rag", StringComparison.OrdinalIgnoreCase) && m.Name.StartsWith("Dra", StringComparison.OrdinalIgnoreCase));
+        }
+
 
         [TestMethod]
         public async Task TestSearchByStats()
@@ -155,6 +171,26 @@ namespace Test_API
 
 
         [TestMethod]
+        public async Task TestSearchByStats_BadRequest()
+        {
+        
+            var actionResult = await controller.SearchByStats(
+                minDamage: null,
+                maxDamage: null,
+                minArmor: null,
+                maxArmor: null,
+                minHealth: null,
+                maxHealth: null,
+                minXpReward: null,
+                maxXpReward: null,
+                pageNumber: 1,
+                pageSize: 10);
+
+            actionResult.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+
+        [TestMethod]
         public async Task TestUpdateMonster()
         {
       
@@ -189,6 +225,30 @@ namespace Test_API
             retrievedMonster.Category.Should().Be(Category.Dragon);
         }
 
+
+        [TestMethod]
+        public async Task TestUpdateMonster_NotFound()
+        {
+       
+            int monsterId = 999;
+            var updatedMonster = new Monster
+            {
+                Id = monsterId,
+                Name = "Updated Dragon",
+                Armor = 60,
+                Damage = 110,
+                Health = 220,
+                XpGiven = 320,
+                Difficulty = DifficultyMonster.Boss,
+                Category = Category.Dragon
+            };
+
+            var result = await controller.Update(monsterId, updatedMonster);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+
+
         [TestMethod]
         public async Task TestDeleteMonster()
         {
@@ -200,6 +260,18 @@ namespace Test_API
             ActionResult<Monster> getResult = await controller.Get(1);
             getResult.Result.Should().BeOfType<NotFoundResult>();
         }
+
+
+        [TestMethod]
+        public async Task TestDeleteMonster_NotFound()
+        {
+     
+            ActionResult<Monster> actionResult = await controller.Delete(999);
+
+            actionResult.Result.Should().BeOfType<NotFoundResult>();
+        }
+
+
 
         [TestCleanup]
         public void Cleanup()
