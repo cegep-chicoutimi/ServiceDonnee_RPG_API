@@ -373,28 +373,36 @@ namespace RPG_API.Controllers
 
         // PUT: api/Monster/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody]Monster monster)
+        public async Task<IActionResult> Update(int id, [FromBody] Monster monster)
         {
-
             if (id != monster.Id)
             {
                 return BadRequest();
             }
 
-            Monster newMonster = await _context.Monster.FindAsync(id);
-            if (newMonster == null)
+            var existingMonster = await _context.Monster.FindAsync(id);
+            if (existingMonster == null)
             {
                 return NotFound();
             }
-            newMonster = monster;
+
+            // Update properties
+            existingMonster.Name = monster.Name;
+            existingMonster.Armor = monster.Armor;
+            existingMonster.Damage = monster.Damage;
+            existingMonster.Health = monster.Health;
+            existingMonster.XpGiven = monster.XpGiven;
+            existingMonster.Difficulty = monster.Difficulty;
+            existingMonster.Category = monster.Category;
+        
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                BadRequest();
+                return BadRequest(e.Message);
             }
 
             return Ok();
@@ -423,7 +431,7 @@ namespace RPG_API.Controllers
             _context.Monster.Remove(monster);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(monster);
         }
     }
 }

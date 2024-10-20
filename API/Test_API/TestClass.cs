@@ -37,9 +37,9 @@ namespace Test_API
 
             Class cl = result.Value as Class;
             cl.Should().NotBeNull();
-            cl.Name.Should().Be("barbare");
-            cl.BoostAttack.Should().Be(2);
-            cl.BoostDefence.Should().Be(2);
+            cl.Name.Should().Be("Guerrier");
+            cl.BoostAttack.Should().Be(10.5);
+            cl.BoostDefence.Should().Be(7.2);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace Test_API
         [TestMethod]
         public async Task TestGetByName()
         {
-            ActionResult<Class> actionResult = await controller.GetByName("barbare");
+            ActionResult<Class> actionResult = await controller.GetByName("Mage");
 
             ObjectResult? result = actionResult.Result as ObjectResult;
 
@@ -62,8 +62,8 @@ namespace Test_API
 
             Class cl = result.Value as Class;
             cl.Should().NotBeNull();
-            cl.Id.Should().Be(1);
-            cl.Name.Should().Be("barbare");
+            cl.Id.Should().Be(2);
+            cl.Name.Should().Be("Mage");
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace Test_API
         [TestMethod]
         public async Task TestSearchByName()
         {
-            ActionResult<PaginatedList<Class>> actionResult = await controller.SearchItemsByName("b", "bar", 1, 10);
+            ActionResult<PaginatedList<Class>> actionResult = await controller.SearchItemsByName("m", "mag", 1, 10);
 
             ObjectResult? result = actionResult.Result as ObjectResult;
 

@@ -92,9 +92,12 @@ namespace Test_API
         {
             Monster[] monsters = new Monster[]
             {
+
             new Monster { Name = "Dragon", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
             new Monster { Name = "Elf", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Medium, MapId = 1, Category = Category.Chimera },
-            new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon }
+            new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon },
+            new Monster { Name = "Dragon2", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
+            new Monster { Name = "Drag", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon }
             };
             context.AddRange(monsters);
             context.SaveChanges();
