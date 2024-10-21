@@ -49,7 +49,7 @@ namespace RPG_API.Controllers
 
             if (character == null)
             {
-                return NotFound("Aucun caract`re pour cette classe trouvé");
+                return NotFound("Aucun caractère pour cette classe trouvé");
             }
             return Ok(character);
         }
