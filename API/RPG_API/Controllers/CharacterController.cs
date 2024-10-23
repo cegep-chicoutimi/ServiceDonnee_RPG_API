@@ -11,7 +11,6 @@ namespace RPG_API.Controllers
     public class CharacterController : ControllerBase
     {
         private readonly APIContext _context;
-        //TODO: changer TOUS les messages d'erreur de FR à EN
         public CharacterController(APIContext context)
         {
             _context = context;
@@ -37,7 +36,7 @@ namespace RPG_API.Controllers
 
             if (character == null)
             {
-                return NotFound();
+                return NotFound("No character with this name found.");
             }
             return Ok(character);
         }
@@ -49,7 +48,7 @@ namespace RPG_API.Controllers
 
             if (character == null)
             {
-                return NotFound("Aucun caractère pour cette classe trouvé");
+                return NotFound("No character with this class found.");
             }
             return Ok(character);
         }
@@ -95,8 +94,14 @@ namespace RPG_API.Controllers
             return Ok();
         }
         [HttpPut("[action]/{id}&{xp}")]
-        public async Task<IActionResult> UpdateXP(int id, int xp, [FromBody] Character character)
+        public async Task<IActionResult> UpdateXP(int id, int xp)
         {
+            var character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
             if (id != character.Id)
             {
                 return BadRequest();
@@ -110,7 +115,6 @@ namespace RPG_API.Controllers
 
             Character.Xp = character.Xp;
 
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -120,11 +124,17 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Xp updated.");
         }
         [HttpPut("[action]/{id}&{damage}")]
-        public async Task<IActionResult> UpdateDamage(int id, int damage, [FromBody] Character character)
+        public async Task<IActionResult> UpdateDamage(int id, int damage)
         {
+            var character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
             if (id != character.Id)
             {
                 return BadRequest();
@@ -148,11 +158,17 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Dommage updated.");
         }
         [HttpPut("[action]/{id}&{armor}")]
-        public async Task<IActionResult> UpdateArmor(int id, int armor, [FromBody] Character character)
+        public async Task<IActionResult> UpdateArmor(int id, int armor)
         {
+            var character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
             if (id != character.Id)
             {
                 return BadRequest();
@@ -176,11 +192,17 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Armor updated.");
         }
         [HttpPut("[action]/{id}&{lives}")]
-        public async Task<IActionResult> UpdateLives(int id, int lives, [FromBody] Character character)
+        public async Task<IActionResult> UpdateLives(int id, int lives)
         {
+            var character = await _context.Character.FindAsync(id);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
             if (id != character.Id)
             {
                 return BadRequest();
@@ -204,22 +226,22 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("lives updated.");
         }
 
         [HttpPut("[action]/{id}&{questid}")]
         public async Task<IActionResult> AddQuest(int id, int questid)
         {
-            // find quest 
-            Quest quest = await _context.Quest.FindAsync(questid);
-            if (quest == null) { return NotFound(); }
-
             // find the character
             Character character = await _context.Character.FindAsync(id);
             if (character == null)
             {
                 return NotFound();
             }
+            // find quest 
+            Quest quest = await _context.Quest.FindAsync(questid);
+            if (quest == null) { return NotFound(); }
+
             // add quest to character's quests
             character.Quests.Add(quest);
 
@@ -233,7 +255,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Quest Added.");
         }
 
         //PUT :api/Character/UpdateInventaire/{id}&{itemid}
@@ -267,7 +289,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Item Added.");
         }
 
         // POST: api/Character
@@ -281,7 +303,7 @@ namespace RPG_API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest("Invalid data entered.");
             }
 
             return Ok(character);
@@ -294,15 +316,14 @@ namespace RPG_API.Controllers
             var character = await _context.Character.FindAsync(id);
             if (character == null)
             {
-                return NotFound();
+                return NotFound("CHaracter not found.");
             }
 
             _context.Character.Remove(character);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Character deleted.");
         }
-
 
         //DELETE: api/Character/id/itemid
         [HttpDelete("[action]/{id}&{itemid}")]
@@ -312,14 +333,14 @@ namespace RPG_API.Controllers
             Item item = await _context.Item.FindAsync(itemid);
             if (item == null)
             {
-                return NotFound();
+                return NotFound("Item not found.");
             }
 
             // find the character
             Character character = await _context.Character.FindAsync(id);
             if (character == null)
             {
-                return NotFound();
+                return NotFound("Item not found.");
             }
 
 
@@ -337,14 +358,14 @@ namespace RPG_API.Controllers
             }
             else
             {
-                return NotFound();
+                return NotFound("Item not found.");
             }
 
 
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Item deleted.");
         }
         //DELETE: api/Character/id/questid
         [HttpDelete("[action]/{id}&{questid}")]
@@ -352,13 +373,13 @@ namespace RPG_API.Controllers
         {
             // find quest 
             Quest quest = await _context.Quest.FindAsync(questid);
-            if (quest == null) { return NotFound(); }
+            if (quest == null) { return NotFound("Quest not found."); }
 
             // find the character
             Character character = await _context.Character.FindAsync(id);
             if (character == null)
             {
-                return NotFound();
+                return NotFound("Quest not found.");
             }
 
 
@@ -376,14 +397,14 @@ namespace RPG_API.Controllers
             }
             else
             {
-                return NotFound();
+                return NotFound("Quest not found.");
             }
 
 
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Quest deleted.");
         }
         private bool CharacterExists(int id)
         {

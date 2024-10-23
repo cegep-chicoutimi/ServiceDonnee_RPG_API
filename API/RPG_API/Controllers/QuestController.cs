@@ -135,7 +135,7 @@ namespace RPG_API.Controllers
         }
         // PUT: api/Quest/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Quest quest)
+        public async Task<ActionResult<Quest>> Update(int id, [FromBody] Quest quest)
         {
 
             if (id != quest.Id)
@@ -159,7 +159,7 @@ namespace RPG_API.Controllers
                 BadRequest();
             }
 
-            return Ok();
+            return Ok(quest);
         }
 
         // POST: api/Quest/Create
@@ -186,7 +186,7 @@ namespace RPG_API.Controllers
             _context.Quest.Remove(quest);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(quest);
         }
     }
 }

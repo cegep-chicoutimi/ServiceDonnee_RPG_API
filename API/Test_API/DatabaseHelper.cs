@@ -31,6 +31,7 @@ namespace Test_API
 
         public void CreateRPGTables(APIContext context)
         {
+            DropTestTables(context);
             context.Database.EnsureCreated();
 
             CreateClasses(context);
@@ -69,8 +70,8 @@ namespace Test_API
         {
             Character[] characters = new Character[]
             {
-            new Character { Name = "Arthur", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 },
-            new Character { Name = "Merlin", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2 }
+            new Character { Name = "Arthur", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 15, Damage = 20, Lives = 3, Xp = 100, ClassId = 1 , Quests = new  List<Quest>()},
+            new Character { Name = "Merlin", Inventory = new List<Item>(), Equipment = new List<JonctionItemCharacter>(), Armor = 5, Damage = 25, Lives = 2, Xp = 120, ClassId = 2, Quests = new  List<Quest>() }
             };
             context.AddRange(characters);
             context.SaveChanges();
@@ -91,9 +92,12 @@ namespace Test_API
         {
             Monster[] monsters = new Monster[]
             {
+
             new Monster { Name = "Dragon", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
             new Monster { Name = "Elf", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Medium, MapId = 1, Category = Category.Chimera },
-            new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon }
+            new Monster { Name = "Gobelin", Armor = 10, Damage = 15, Health = 30, XpGiven = 50, Difficulty = DifficultyMonster.Easy, MapId = 2, Category = Category.Demon },
+            new Monster { Name = "Dragon2", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon },
+            new Monster { Name = "Drag", Armor = 50, Damage = 100, Health = 200, XpGiven = 300, Difficulty = DifficultyMonster.Hard, MapId = 1, Category = Category.Dragon }
             };
             context.AddRange(monsters);
             context.SaveChanges();

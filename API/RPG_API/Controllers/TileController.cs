@@ -50,19 +50,12 @@ namespace RPG_API.Controllers
 
         // PUT: api/Tile/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Tile tile)
+        public async Task<ActionResult<Tile>> Update(int id, [FromBody] Tile tile)
         {
-
-            if (id != tile.Id)
-            {
-                return BadRequest();
-            }
+            if (id != tile.Id) { return BadRequest(); }
 
             Tile newTile = await _context.Tile.FindAsync(id);
-            if (newTile == null)
-            {
-                return NotFound();
-            }
+            if (newTile == null) { return NotFound(); }
             newTile = tile;
 
             try
@@ -74,7 +67,7 @@ namespace RPG_API.Controllers
                 BadRequest();
             }
 
-            return Ok();
+            return Ok(newTile);
         }
 
         // POST: api/Tile/Create
@@ -100,7 +93,7 @@ namespace RPG_API.Controllers
             _context.Tile.Remove(tile);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(tile);
         }
     }
 }
