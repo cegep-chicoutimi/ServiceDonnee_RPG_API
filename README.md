@@ -28,3 +28,5 @@ Un jeu mobile en mode RPG où le joueur combat des monstres, complête des quêt
 ## Dates de remise <a name="dateRemise"></a>
 Développement de l'API - vendredi 4 octobre
 Documentation jeu mobile - vendredi 1 novembre
+Développement application mobile - 13 décembre
+Présentation et démonstration - semaine du 13 décembre
