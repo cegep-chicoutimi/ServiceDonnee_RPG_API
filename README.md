@@ -17,6 +17,8 @@ Utilisation de ORM et DTO pour la communication entre l'API et la BD.
 
 ## Jeu RPG <a name="Jeu"></a>
 ### Description  <a name="descriptionJeu"></a>
+RPG 2D mobile sur Unity.
+Un jeu mobile en mode RPG où le joueur combat des monstres, complête des quêtes et augmente son niveau pour battre les nombreux boss du jeu.
 
 ## Crédits <a name="credits"></a>
 - Jérôme Savard - 2131272 (https://github.com/2131272)
