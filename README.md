@@ -25,3 +25,4 @@ Utilisation de ORM et DTO pour la communication entre l'API et la BD.
 
 ## Dates de remise <a name="dateRemise"></a>
 Développement de l'API - vendredi 4 octobre
+Documentation jeu mobile - vendredi 1 novembre
