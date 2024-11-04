@@ -48,15 +48,36 @@ namespace RPG_API.Controllers
             return Ok(pagetTiles);
         }
 
-        // PUT: api/Tile/Update/{id}
+        // PUT: api/Tile/Update/{id}/{newX}/{newY}/{newType}
         [HttpPut("[action]/{id}")]
-        public async Task<ActionResult<Tile>> Update(int id, [FromBody] Tile tile)
+        public async Task<ActionResult<Tile>> Update(int id, [FromQuery] int? newX = null, [FromQuery] int? newY = null, [FromQuery] int? newType = null, [FromQuery] int? newMapId = null)
         {
-            if (id != tile.Id) { return BadRequest(); }
+            var tile = await _context.Tile.FindAsync(id);
+            if (tile == null)
+            {
+                return NotFound();
+            }
 
-            Tile newTile = await _context.Tile.FindAsync(id);
-            if (newTile == null) { return NotFound(); }
-            newTile = tile;
+            // Update only the specified properties
+            if (newX != null)
+            { tile.X = (int) newX;}
+
+            if (newY != null)
+            { tile.Y = (int) newY; }
+
+            if (newMapId != null)
+            { tile.MapId = (int) newMapId; }
+
+            if (newType.HasValue)
+            {
+                if (Enum.IsDefined(typeof(TypeTile), newType))
+                { tile.Type = (TypeTile)newType; }
+
+                else
+                {
+                    return BadRequest("Type invalide");
+                }
+            }
 
             try
             {
@@ -64,10 +85,10 @@ namespace RPG_API.Controllers
             }
             catch (Exception)
             {
-                BadRequest();
+                return BadRequest();
             }
 
-            return Ok(newTile);
+            return Ok(tile);
         }
 
         // POST: api/Tile/Create
