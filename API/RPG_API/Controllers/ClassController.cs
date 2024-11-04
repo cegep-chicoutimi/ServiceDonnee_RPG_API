@@ -78,30 +78,34 @@ namespace RPG_API.Controllers
             // Utiliser PaginatedList pour créer une liste paginée
             var pagedClass = await PaginatedList<Class>.CreateAsync(_class.AsNoTracking(), pageNumber ?? 1, pageSize);
 
-             if (totalCount == 0)
+            if (totalCount == 0)
             {
                 return NotFound("Aucune classe n'a été trouvé qui correspond à ces critères.");
             }
             return Ok(pagedClass);
         }
 
-        //PUT: api/Class/Update/{id}
+        //PUT: api/Class/Update
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Class classCharacter)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] int? boostDefence = null, [FromQuery] int? boostAttack = null)
         {
-
-            if (id != classCharacter.Id)
-            {
-                return BadRequest();
-            }
-
             var newClass = await _context.Class.FindAsync(id);
             if (newClass == null)
             {
                 return NotFound();
             }
-            newClass.Name = classCharacter.Name;
-           
+            if(name != null)
+            {
+                newClass.Name = name;
+            }
+            if(boostDefence != null)
+            {
+                newClass.BoostDefence = (int)boostDefence;
+            }
+            if (boostAttack != null)
+            {
+                newClass.BoostAttack =(int)boostAttack;
+            }
             try
             {
                 await _context.SaveChangesAsync();

@@ -66,21 +66,38 @@ namespace RPG_API.Controllers
         }
         //PUT: api/Character/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Character character)
-
+        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] int? xp = null,[FromQuery] int? damage = null, [FromQuery] int? armor = null, [FromQuery] int? lives = null, [FromQuery] Class? _class = null)
         {
-
-            if (id != character.Id)
-            {
-                return BadRequest();
-            }
 
             var newCharacter = await _context.Character.FindAsync(id);
             if (newCharacter == null)
             {
                 return NotFound();
             }
-            newCharacter.Name = character.Name;
+            if(name != null)
+            {
+            newCharacter.Name = (string)name;
+            }
+            if(xp != null)
+            {
+                newCharacter.Xp = (int)xp;
+            }
+            if(damage != null)
+            {
+                newCharacter.Damage = (int)damage;
+            }
+            if(armor != null)
+            {
+                newCharacter.Armor = (int)armor;
+            }
+            if(lives != null)
+            {
+                newCharacter.Lives = (int)lives;
+            }
+            if(_class != null)
+            {
+                newCharacter.Class = _class;
+            }
 
             try
             {
@@ -107,16 +124,9 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            var Character = await _context.Character.FindAsync(id);
-            if (Character == null)
-            {
-                return NotFound();
-            }
-
-            Character.Xp = character.Xp;
-
             try
             {
+                character.Xp = xp;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -140,17 +150,9 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            var Character = await _context.Character.FindAsync(id);
-            if (Character == null)
-            {
-                return NotFound();
-            }
-
-            Character.Damage = character.Damage;
-
-
             try
             {
+                character.Damage = damage;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -158,7 +160,7 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            return Ok("Dommage updated.");
+            return Ok("Damage updated.");
         }
         [HttpPut("[action]/{id}&{armor}")]
         public async Task<IActionResult> UpdateArmor(int id, int armor)
@@ -174,17 +176,9 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            var Character = await _context.Character.FindAsync(id);
-            if (Character == null)
-            {
-                return NotFound();
-            }
-
-            Character.Armor = character.Armor;
-
-
             try
             {
+                character.Armor = armor;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -208,17 +202,10 @@ namespace RPG_API.Controllers
                 return BadRequest();
             }
 
-            var Character = await _context.Character.FindAsync(id);
-            if (Character == null)
-            {
-                return NotFound();
-            }
-
-            Character.Lives = character.Lives;
-
 
             try
             {
+                character.Lives = lives;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
