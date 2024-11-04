@@ -33,7 +33,7 @@ namespace RPG_API.Controllers
         [HttpGet("[action]/{name}")]
         public async Task<ActionResult<Item>> GetByName(string name)
         {
-             Item item = await _context.Item.FirstOrDefaultAsync(i => i.Name == name);
+            Item item = await _context.Item.FirstOrDefaultAsync(i => i.Name == name);
 
             if (item == null)
             {
@@ -189,13 +189,8 @@ namespace RPG_API.Controllers
 
         //PUT: api/Item/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Item item)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] double? boostDefence = null, [FromQuery] int? boostAttack = null, [FromQuery] int? healthRestoration = null, [FromQuery] TypeItem? type = null)
         {
-
-            if (id != item.Id)
-            {
-                return BadRequest("The item ID does not match the route ID.");
-            }
 
             Item newItem = await _context.Item.FindAsync(id);
             if (newItem == null)
@@ -203,14 +198,31 @@ namespace RPG_API.Controllers
                 return NotFound($"Item with ID {id} not found.");
             }
 
-            newItem.Name = item.Name;
-            newItem.BoostDefence = item.BoostDefence;
-            newItem.BoostAttack = item.BoostAttack;
-            newItem.HealthRestoration = item.HealthRestoration;
-            newItem.Type = item.Type;
+            if (name != null)
+            {
+                newItem.Name = name;
+            }
+            if (boostDefence != null)
+            {
+                newItem.BoostDefence = (int)boostDefence;
+            }
+            if (boostAttack != null)
+            {
+                newItem.BoostAttack = (int)boostAttack;
+            }
+            if (healthRestoration != null)
+            {
+                newItem.HealthRestoration = (int)healthRestoration;
+
+            }
+            if (type != null)
+            {
+                newItem.Type = (TypeItem)type;
+            }
 
             try
             {
+
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -218,7 +230,7 @@ namespace RPG_API.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(item);
+            return Ok(newItem);
         }
 
         //POST: api/Item/Create
