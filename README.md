@@ -19,7 +19,7 @@ Utilisation de ORM et DTO pour la communication entre l'API et la BD.
 ### Description  <a name="descriptionJeu"></a>
 RPG 2D mobile sur Unity.
 Un jeu mobile en mode RPG où le joueur combat des monstres, complête des quêtes et augmente son niveau pour battre les nombreux boss du jeu.
-
+Lien pour le dépot du projet Unity: https://github.com/cegep-chicoutimi/ServiceDonnee_RPG_App
 ## Crédits <a name="credits"></a>
 - Jérôme Savard - 2131272 (https://github.com/2131272)
 - Samara Boudreault - 2230912 (https://github.com/Ptit-Poulet)
