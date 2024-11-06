@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Features;
 using Microsoft.EntityFrameworkCore;
 using RPG_API.Data.Context;
 using RPG_API.Models;
@@ -44,23 +45,36 @@ namespace RPG_API.Controllers
 
         // PUT: api/Map/Update/{id}
         [HttpPut("[action]/{id}&{map}")]
-        public async Task<IActionResult> Update(int id, [FromBody]Map map)
+        public async Task<IActionResult> Update(int id, [FromQuery] ICollection<Tile?> coordinates = null, [FromQuery] string? imageUrl = null, [FromQuery] int? characterId = null, [FromQuery] ICollection<Monster?> monsters = null)
         {
 
-            if (id != map.Id)
-            {
-                return BadRequest();
-            }
+          
 
             Map newMap = await _context.Map.FindAsync(id);
             if (newMap == null)
             {
                 return NotFound();
             }
-            newMap = map;
+            if(coordinates != null)
+            {
+                newMap.Coordinates = coordinates;
+            }
+            if(imageUrl != null)
+            {
+                newMap.ImageUrl = imageUrl;
+            }
+            if(characterId != null)
+            {
+                newMap.CharacterId = (int)characterId;
+            }
+            if(monsters != null)
+            {
+                newMap.Monster = monsters;
+            }
 
             try
             {
+            
                 await _context.SaveChangesAsync();
             }
             catch (Exception)

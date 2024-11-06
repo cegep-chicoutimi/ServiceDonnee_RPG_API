@@ -135,28 +135,38 @@ namespace RPG_API.Controllers
         }
         // PUT: api/Quest/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<ActionResult<Quest>> Update(int id, [FromBody] Quest quest)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? title = null, [FromQuery] string? description = null, [FromQuery] int? reward = null, [FromQuery] int? itemId = null)
         {
-
-            if (id != quest.Id)
+            Quest quest = await _context.Quest.FindAsync(id);
+            if (quest == null)
             {
-                return BadRequest();
+                return NotFound($"Quest with ID {id} not found.");
             }
 
-            Quest newQuest = await _context.Quest.FindAsync(id);
-            if (newQuest == null)
+            if (title != null)
             {
-                return NotFound();
+                quest.Title = title;
             }
-            newQuest = quest;
+            if (description != null)
+            {
+                quest.Description = description;
+            }
+            if (reward != null)
+            {
+                quest.Reward = (int)reward;
+            }
+            if (itemId != null)
+            {
+                quest.ItemId = itemId;
+            }
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                BadRequest();
+                return BadRequest(e.Message);
             }
 
             return Ok(quest);

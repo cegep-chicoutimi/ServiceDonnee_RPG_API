@@ -370,31 +370,49 @@ namespace RPG_API.Controllers
             return Ok(response);
         }
 
-
         // PUT: api/Monster/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Monster monster)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] DifficultyMonster? difficulty = null, [FromQuery] Category? category = null, 
+            [FromQuery] int? xpGiven = null, [FromQuery] int? damage = null, [FromQuery] int? armor = null, [FromQuery] int? health = null, [FromQuery] int? mapId = null)
         {
-            if (id != monster.Id)
+            Monster monster = await _context.Monster.FindAsync(id);
+            if (monster == null)
             {
-                return BadRequest();
+                return NotFound($"Monster with ID {id} not found.");
             }
 
-            var existingMonster = await _context.Monster.FindAsync(id);
-            if (existingMonster == null)
+            if (name != null)
             {
-                return NotFound();
+                monster.Name = name;
             }
-
-            // Update properties
-            existingMonster.Name = monster.Name;
-            existingMonster.Armor = monster.Armor;
-            existingMonster.Damage = monster.Damage;
-            existingMonster.Health = monster.Health;
-            existingMonster.XpGiven = monster.XpGiven;
-            existingMonster.Difficulty = monster.Difficulty;
-            existingMonster.Category = monster.Category;
-        
+            if (difficulty != null)
+            {
+                monster.Difficulty = (DifficultyMonster)difficulty;
+            }
+            if (category != null)
+            {
+                monster.Category = (Category)category;
+            }
+            if (xpGiven != null)
+            {
+                monster.XpGiven = (int)xpGiven;
+            }
+            if (damage != null)
+            {
+                monster.Damage = (int)damage;
+            }
+            if (armor != null)
+            {
+                monster.Armor = (int)armor;
+            }
+            if (health != null)
+            {
+                monster.Health = (int)health;
+            }
+            if (mapId != null)
+            {
+                monster.MapId = (int)mapId;
+            }
 
             try
             {
@@ -405,7 +423,7 @@ namespace RPG_API.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok();
+            return Ok(monster);
         }
 
         // POST: api/Monster/Create
