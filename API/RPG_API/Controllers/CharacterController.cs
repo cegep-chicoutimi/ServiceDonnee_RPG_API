@@ -20,7 +20,8 @@ namespace RPG_API.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<ActionResult<Character>> Get(int id)
         {
-            var character = await _context.Character.FindAsync(id);
+            var character = await _context.Character.Include(c => c.Inventory).Where(c => c.Id == id).FirstOrDefaultAsync();
+            
 
             if (character == null)
             {
