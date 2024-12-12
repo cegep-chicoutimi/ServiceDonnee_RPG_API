@@ -21,7 +21,7 @@ namespace RPG_API.Controllers
         public async Task<ActionResult<Character>> Get(int id)
         {
             var character = await _context.Character.Include(c => c.Inventory).Where(c => c.Id == id).FirstOrDefaultAsync();
-            
+
 
             if (character == null)
             {
@@ -67,7 +67,7 @@ namespace RPG_API.Controllers
         }
         //PUT: api/Character/Update/{id}
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] int? xp = null,[FromQuery] int? damage = null, [FromQuery] int? armor = null, [FromQuery] int? lives = null, [FromQuery] Class? _class = null)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? name = null, [FromQuery] int? xp = null, [FromQuery] int? damage = null, [FromQuery] int? armor = null, [FromQuery] int? lives = null, [FromQuery] Class? _class = null)
         {
 
             var newCharacter = await _context.Character.FindAsync(id);
@@ -75,27 +75,27 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
-            if(name != null)
+            if (name != null)
             {
-            newCharacter.Name = (string)name;
+                newCharacter.Name = (string)name;
             }
-            if(xp != null)
+            if (xp != null) 
             {
                 newCharacter.Xp = (int)xp;
             }
-            if(damage != null)
+            if (damage != null)
             {
                 newCharacter.Damage = (int)damage;
             }
-            if(armor != null)
+            if (armor != null)
             {
                 newCharacter.Armor = (int)armor;
             }
-            if(lives != null)
+            if (lives != null)
             {
                 newCharacter.Lives = (int)lives;
             }
-            if(_class != null)
+            if (_class != null)
             {
                 newCharacter.Class = _class;
             }
@@ -264,6 +264,10 @@ namespace RPG_API.Controllers
             {
                 return NotFound();
             }
+            if (character.Inventory == null)
+            {
+                character.Inventory = new List<Item>();
+            }
             // add item to character's inventory
             character.Inventory.Add(item);
 
@@ -325,33 +329,41 @@ namespace RPG_API.Controllers
             }
 
             // find the character
-            Character character = await _context.Character.FindAsync(id);
+            //Character character = await _context.Character.FindAsync(id);
+            Character character = await _context.Character
+            .Include(c => c.Inventory)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
             if (character == null)
             {
                 return NotFound("Item not found.");
             }
-
-
+            if (character.Inventory == null)
+            {
+                character.Inventory = new List<Item>();
+                return NotFound("Character's inventory is empty.");
+            }
             // remove item from character's inventory
 
-            var itemToRemove = character.Inventory.FirstOrDefault(i => i.Equals(item));
+            var itemToRemove = character.Inventory.FirstOrDefault(i => i.Id == item.Id);
             if (itemToRemove != null)
             {
                 character.Inventory.Remove(itemToRemove);
-                if (character.Inventory.FirstOrDefault(i => i.Equals(item)) == null)
-                {
-                    // if this item cannot be found in the inventory, remove relation
-                    item.Characters.Remove(character);
-                }
+                item.Characters.Remove(character);
             }
             else
             {
-                return NotFound("Item not found.");
+                return NotFound("Item not found in character's inventory.");
             }
 
-
-
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
 
             return Ok("Item deleted.");
         }
